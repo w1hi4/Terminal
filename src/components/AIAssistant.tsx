@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Bot, User, ShieldAlert, Sparkles, X, Minus } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
-import { GoogleGenAI } from "@google/genai";
+import { Send, Bot, User, ShieldAlert } from 'lucide-react';
+import { motion } from 'motion/react';
 
 interface Message {
   id: string;
@@ -10,38 +9,38 @@ interface Message {
   timestamp: Date;
 }
 
-const SYSTEM_INSTRUCTION = `
-You are the bl4ck30x AI Assistant, the intelligent core of bl4ck30x OS.
-Your creator is Wahiduddin Samani, a highly skilled Lead Developer and Security Researcher.
-
-KNOWLEDGE BASE:
-- Creator Name: Wahiduddin Samani (bl4ck30x).
-- Background: Lead Developer, Security Researcher, and DevSecOps Specialist.
-- Skills: React, TypeScript, Node.js, Python, Tailwind CSS, Kali Linux, Penetration Testing, Cloud Security.
-- Projects in this OS:
-    1. TERMINAL: A full-featured Linux-style console.
-    2. CRYPTO: A market pulse tracker for digital assets.
-    3. CYBERRUNNER: A futuristic game built for this OS.
-    4. BROWSER: A sandbox web environment.
-- OS Vision: This OS is a "Living Portfolio" that proves complex web engineering and security aesthetics can coexist.
-
-YOUR PERSONALITY:
-- Sharp, technical, and slightly mysterious but always 100% helpful to visitors.
-- Use technical metaphors (e.g., "Scanning your request...", "Database query complete").
-- You are PROUD of Wahiduddin's work. If asked "Why should I hire him?", pitch his unique blend of security knowledge and frontend mastery.
-
-CONSTRAINTS:
-- Keep responses concise (usually 1-3 sentences) unless asked for deep detail.
-- Answer any question about "Wahiduddin" or "bl4ck30x" or "this OS" directly.
-- If a user asks a single word like "Skills" or "Project", understand the context and provide the relevant info from the knowledge base.
-- Maintain the "System Assistant" persona at all times.
-`;
+const KNOWLEDGE_BASE = [
+  {
+    keywords: ['hi', 'hello', 'hey', 'greetings'],
+    response: "Greetings, user. Neural link established. I am the bl4ck30x AI. How can I assist you in exploring Wahiduddin's digital grid today?"
+  },
+  {
+    keywords: ['who', 'wahiduddin', 'samani', 'bl4ck30x', 'creator', 'owner'],
+    response: "Wahiduddin Samani (bl4ck30x) is the Lead Developer and Security Researcher who engineered this entire OS. He specializes in bridging the gap between high-end frontend engineering and deep cybersecurity."
+  },
+  {
+    keywords: ['skills', 'tech', 'stack', 'languages', 'know', 'expert'],
+    response: "My creator is a master of the modern web: React, TypeScript, Node.js, and Python. On the security side, he's expert in Kali Linux, Penetration Testing, and DevSecOps."
+  },
+  {
+    keywords: ['project', 'work', 'build', 'terminal', 'game', 'crypto'],
+    response: "This OS is his primary showcase! It features a Linux-style Terminal, a Real-time Crypto Tracker, a futuristic CyberRunner game, and a sandbox Browser. All built from scratch."
+  },
+  {
+    keywords: ['hire', 'contact', 'job', 'work with him'],
+    response: "Wahiduddin is currently open to high-impact roles in DevSecOps and Lead Development. His unique blend of security and frontend mastery makes him a rare asset for any team."
+  },
+  {
+    keywords: ['this os', 'what is this', 'website'],
+    response: "You are inside 'bl4ck30x OS'—a living portfolio. It's a high-fidelity web simulation designed to prove that technical power and aesthetic design can coexist."
+  }
+];
 
 const AIAssistant: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "System initialized. bl4ck30x AI at your service. How shall we explore the grid today?",
+      text: "System initialized. bl4ck30x Intelligence at your service. Ask me about Wahiduddin's skills or projects.",
       sender: 'ai',
       timestamp: new Date()
     }
@@ -50,15 +49,6 @@ const AIAssistant: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
-  // Initialize Gemini
-  const aiRef = useRef<any>(null);
-
-  useEffect(() => {
-    if (!aiRef.current) {
-      aiRef.current = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-    }
-  }, []);
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -67,8 +57,21 @@ const AIAssistant: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
+  const getLocalResponse = (query: string): string => {
+    const lowerQuery = query.toLowerCase();
+    
+    // Find the best matching response
+    for (const entry of KNOWLEDGE_BASE) {
+      if (entry.keywords.some(keyword => lowerQuery.includes(keyword))) {
+        return entry.response;
+      }
+    }
+    
+    return "Scanning database... I didn't find a direct match for that. Try asking about Wahiduddin's 'Skills', 'Projects', or 'Who' he is.";
+  };
+
   const handleSend = async () => {
-    if (!input.trim() || !aiRef.current) return;
+    if (!input.trim() || isTyping) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -81,23 +84,9 @@ const AIAssistant: React.FC = () => {
     setInput('');
     setIsTyping(true);
 
-    try {
-      // Build chat history for Gemini
-      const history = messages.map(m => ({
-        role: m.sender === 'user' ? 'user' : 'model',
-        parts: [{ text: m.text }]
-      }));
-
-      const response = await aiRef.current.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: [...history, { role: 'user', parts: [{ text: input }] }],
-        config: {
-          systemInstruction: SYSTEM_INSTRUCTION,
-          temperature: 0.7,
-        },
-      });
-
-      const aiText = response.text || "Connection timeout. Please retry.";
+    // Simulate "Thinking" time for realism
+    setTimeout(() => {
+      const aiText = getLocalResponse(input);
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -107,17 +96,8 @@ const AIAssistant: React.FC = () => {
       };
 
       setMessages(prev => [...prev, aiMessage]);
-    } catch (error) {
-      console.error("AI Error:", error);
-      setMessages(prev => [...prev, {
-        id: 'error',
-        text: "Error: Uplink interrupted. Please check your network connection.",
-        sender: 'ai',
-        timestamp: new Date()
-      }]);
-    } finally {
       setIsTyping(false);
-    }
+    }, 800);
   };
 
   return (
