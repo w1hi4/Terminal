@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const GRID_SIZE = 20;
 const INITIAL_SNAKE = [{ x: 10, y: 10 }];
@@ -87,10 +88,10 @@ const SnakeGame: React.FC = () => {
       </div>
       
       <div 
-        className="relative bg-black border-2 border-white/10 rounded-lg overflow-hidden"
+        className="relative bg-black border-2 border-white/10 rounded-lg overflow-hidden shrink-0"
         style={{ 
-          width: GRID_SIZE * 20, 
-          height: GRID_SIZE * 20,
+          width: 'min(90vw, 400px)', 
+          height: 'min(90vw, 400px)',
           display: 'grid',
           gridTemplateColumns: `repeat(${GRID_SIZE}, 1fr)`,
           gridTemplateRows: `repeat(${GRID_SIZE}, 1fr)`
@@ -126,9 +127,47 @@ const SnakeGame: React.FC = () => {
         )}
       </div>
 
-      <div className="mt-6">
-        <p className="text-[10px] text-white/40 flex items-center italic uppercase tracking-widest">
-          Use Arrow Keys to Move • Enter to Restart
+      <div className="mt-6 flex flex-col items-center gap-4">
+        <div className="md:hidden grid grid-cols-3 gap-2">
+          <div />
+          <button 
+            className="w-12 h-12 flex items-center justify-center bg-white/10 border border-white/20 rounded-xl active:bg-green-500/20 active:border-green-500/50 transition-all"
+            onPointerDown={() => direction.y === 0 && setDirection({ x: 0, y: -1 })}
+          >
+            <ChevronUp className="w-6 h-6 text-green-400" />
+          </button>
+          <div />
+          <button 
+            className="w-12 h-12 flex items-center justify-center bg-white/10 border border-white/20 rounded-xl active:bg-green-500/20 active:border-green-500/50 transition-all"
+            onPointerDown={() => direction.x === 0 && setDirection({ x: -1, y: 0 })}
+          >
+            <ChevronLeft className="w-6 h-6 text-green-400" />
+          </button>
+          <button 
+            className="w-12 h-12 flex items-center justify-center bg-white/10 border border-white/20 rounded-xl active:bg-green-500/20 active:border-green-500/50 transition-all"
+            onPointerDown={() => direction.y === 0 && setDirection({ x: 0, y: 1 })}
+          >
+            <ChevronDown className="w-6 h-6 text-green-400" />
+          </button>
+          <button 
+            className="w-12 h-12 flex items-center justify-center bg-white/10 border border-white/20 rounded-xl active:bg-green-500/20 active:border-green-500/50 transition-all"
+            onPointerDown={() => direction.x === 0 && setDirection({ x: 1, y: 0 })}
+          >
+            <ChevronRight className="w-6 h-6 text-green-400" />
+          </button>
+        </div>
+        
+        {gameOver && (
+          <button 
+            onClick={resetGame}
+            className="md:hidden px-6 py-2 bg-green-500 text-black font-bold uppercase tracking-widest rounded-lg active:scale-95 transition-transform"
+          >
+            Restart Game
+          </button>
+        )}
+
+        <p className="text-[10px] text-white/40 flex items-center italic uppercase tracking-widest text-center">
+          {window.innerWidth < 768 ? 'Use D-Pad to Navigate' : 'Use Arrow Keys to Move • Enter to Restart'}
         </p>
       </div>
     </div>

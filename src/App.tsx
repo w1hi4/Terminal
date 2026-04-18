@@ -180,59 +180,55 @@ function App() {
         >
           {/* Top Panel */}
           <div className="h-8 w-full bg-black/80 backdrop-blur-md border-b border-white/5 flex items-center justify-between px-2 z-[100]">
-            <div className="flex items-center gap-4 h-full">
-              <button className="p-1 hover:bg-white/10 rounded transition-colors">
+            <div className="flex items-center gap-4 h-full shrink-0">
+              <button className="p-1 hover:bg-white/10 rounded transition-colors shrink-0">
                 <img 
                   src="https://www.kali.org/images/kali-logo.svg" 
                   alt="Kali" 
                   className="w-5 h-5 brightness-200"
                 />
               </button>
-              <div className="hidden md:flex items-center gap-4 text-[11px] font-bold text-white/60 uppercase tracking-tighter">
+              <div className="hidden sm:flex items-center gap-4 text-[11px] font-bold text-white/60 uppercase tracking-tighter shrink-0">
                 <button className="hover:text-white transition-colors">Applications</button>
-                <button className="hover:text-white transition-colors">Places</button>
-                <span className="text-blue-400/40 ml-4 select-none">bl4ck30x OS v1.0</span>
+                <button className="hover:text-white transition-colors hidden md:block">Places</button>
+                <span className="text-blue-400/40 ml-2 md:ml-4 select-none whitespace-nowrap">bl4ck30x OS</span>
               </div>
-              <div className="h-4 w-[1px] bg-white/10 mx-1" />
-              <div className="flex items-center gap-2">
+              <div className="h-4 w-[1px] bg-white/10 mx-1 shrink-0" />
+              <div className="flex items-center gap-1 shrink-0">
                 <button 
                   onClick={() => setIsTerminalOpen(true)}
                   className="p-1 hover:bg-white/10 rounded transition-colors text-white/60 hover:text-white"
                 >
-                  <TerminalIcon className="w-4 h-4" />
+                  <TerminalIcon className="w-3.5 h-3.5" />
                 </button>
                 <button 
                   onClick={() => setIsBrowserOpen(true)}
                   className="p-1 hover:bg-white/10 rounded transition-colors text-white/60 hover:text-white"
                 >
-                  <Globe className="w-4 h-4" />
+                  <Globe className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
 
-            <div className="flex items-center gap-4 h-full">
-              <div className="flex items-center gap-3 text-white/60">
-                {isOnline ? (
-                  <Wifi className="w-3.5 h-3.5 text-blue-400" />
-                ) : (
-                  <Wifi className="w-3.5 h-3.5 text-red-500 opacity-50" />
-                )}
-                <Volume2 className="w-3.5 h-3.5" />
-                <Battery className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-2 md:gap-4 h-full">
+              <div className="flex items-center gap-2 md:gap-3 text-white/60 shrink-0">
+                <Wifi className={`w-3 h-3 ${isOnline ? 'text-blue-400' : 'text-red-500 opacity-50'}`} />
+                <Volume2 className="w-3 h-3 hidden xs:block" />
+                <Battery className="w-3 h-3" />
               </div>
-              <div className="h-4 w-[1px] bg-white/10 mx-1" />
-              <div className="text-[11px] font-bold text-white/80 tracking-tight">
+              <div className="h-4 w-[1px] bg-white/10 mx-1 shrink-0" />
+              <div className="text-[10px] md:text-[11px] font-bold text-white/80 tracking-tight shrink-0">
                 {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </div>
-              <div className="flex items-center gap-1 ml-2">
-                <div className="flex items-center gap-2 px-2 py-0.5 bg-white/5 rounded-full border border-white/10">
+              <div className="flex items-center gap-1 ml-1 md:ml-2">
+                <div className="hidden xs:flex items-center gap-2 px-2 py-0.5 bg-white/5 rounded-full border border-white/10 shrink-0">
                   <img 
                     src="https://github.com/w1hi4.png" 
                     alt="w1hi4" 
-                    className="w-4 h-4 rounded-full"
+                    className="w-3.5 h-3.5 rounded-full"
                     referrerPolicy="no-referrer"
                   />
-                  <span className="text-[10px] font-bold text-white/60">bl4ck30x</span>
+                  <span className="text-[9px] font-bold text-white/60 hidden sm:inline">bl4ck30x</span>
                 </div>
                 <button 
                   onClick={handleRestart}
@@ -260,7 +256,7 @@ function App() {
           </div>
 
           {/* Desktop Content */}
-          <div className="p-4 grid grid-flow-col grid-rows-[repeat(auto-fill,100px)] gap-4 h-[calc(100vh-32px)]">
+          <div className="p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-flow-col md:grid-rows-[repeat(auto-fill,100px)] gap-2 sm:gap-4 h-[calc(100vh-32px)] content-start auto-cols-[100px] overflow-y-auto overflow-x-hidden md:overflow-x-auto">
             <DesktopIcon 
               icon={User} 
               label="bl4ck30x Profile" 

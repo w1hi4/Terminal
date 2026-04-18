@@ -45,6 +45,14 @@ const CyberRunner: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [jump, gameOver, resetGame]);
 
+  const handleInteraction = () => {
+    if (gameOver) {
+      resetGame();
+    } else {
+      jump();
+    }
+  };
+
   const update = useCallback((time: number) => {
     if (!isPlaying || gameOver) {
       lastTimeRef.current = time;
@@ -104,7 +112,14 @@ const CyberRunner: React.FC = () => {
   }, [update]);
 
   return (
-    <div className="h-full w-full bg-[#0a0a0a] flex flex-col items-center justify-center p-4 font-mono text-white overflow-hidden select-none">
+    <div 
+      className="h-full w-full bg-[#0a0a0a] flex flex-col items-center justify-center p-4 font-mono text-white overflow-hidden select-none active:opacity-90"
+      onMouseDown={handleInteraction}
+      onTouchStart={(e) => {
+        e.preventDefault();
+        handleInteraction();
+      }}
+    >
       <div className="mb-4 flex justify-between w-full max-w-[600px]">
         <span className="text-blue-400 font-bold uppercase tracking-widest">Score: {Math.floor(score / 10)}</span>
         <span className="text-white/40 text-[10px] uppercase tracking-widest">w1hi4 CyberRunner v1.0</span>
@@ -113,7 +128,7 @@ const CyberRunner: React.FC = () => {
       <div className="relative w-full max-w-[600px] h-[200px] bg-[#111] border-b-2 border-blue-500/50 overflow-hidden">
         {/* Player */}
         <div 
-          className="absolute left-[50px] w-10 h-10 bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)] rounded-sm flex items-center justify-center"
+          className="absolute left-[50px] w-10 h-10 bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)] rounded-sm flex items-center justify-center transition-all duration-75"
           style={{ bottom: playerY }}
         >
           <div className="w-6 h-1 bg-white/40 absolute top-2" />
@@ -140,7 +155,7 @@ const CyberRunner: React.FC = () => {
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center text-center">
             <h2 className="text-xl font-bold text-blue-400 mb-4 uppercase tracking-widest">Ready to Run?</h2>
             <div className="px-4 py-2 bg-blue-500/20 border border-blue-500/50 rounded text-[10px] font-bold uppercase tracking-[0.3em] animate-pulse">
-              Press Space to Start
+              Space or Tap to Start
             </div>
           </div>
         )}
@@ -150,7 +165,7 @@ const CyberRunner: React.FC = () => {
             <h2 className="text-2xl font-bold text-red-500 mb-2 uppercase tracking-tighter">System Overload</h2>
             <p className="text-xs text-white/60 mb-6 uppercase tracking-widest">Connection lost at {Math.floor(score / 10)} units.</p>
             <div className="px-4 py-2 bg-white/10 border border-white/20 rounded text-[10px] font-bold uppercase tracking-[0.3em] animate-pulse">
-              Press Enter to Reboot
+              Enter or Tap to Reboot
             </div>
           </div>
         )}
@@ -158,8 +173,8 @@ const CyberRunner: React.FC = () => {
 
       <div className="mt-8 text-center">
         <p className="text-[10px] text-white/40 uppercase tracking-widest leading-loose">
-          Space / Up to Jump • Avoid the Firewalls<br/>
-          <span className="text-blue-500/60">Built for w1hi4 OS</span>
+          Space / Up / Tap to Jump • Avoid the Firewalls<br/>
+          <span className="text-blue-500/60 font-bold">Touch controls active for mobile</span>
         </p>
       </div>
     </div>

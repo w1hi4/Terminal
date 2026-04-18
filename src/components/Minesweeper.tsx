@@ -14,6 +14,7 @@ const Minesweeper: React.FC = () => {
   const [grid, setGrid] = useState<Cell[][]>([]);
   const [gameOver, setGameOver] = useState(false);
   const [win, setWin] = useState(false);
+  const [isFlagMode, setIsFlagMode] = useState(false);
 
   const initGrid = useCallback(() => {
     const newGrid: Cell[][] = [];
@@ -80,8 +81,17 @@ const Minesweeper: React.FC = () => {
   }, [initGrid, gameOver, win]);
 
   const revealCell = (r: number, c: number) => {
-    if (gameOver || win || grid[r][c].isRevealed || grid[r][c].isFlagged) return;
+    if (gameOver || win || grid[r][c].isRevealed) return;
 
+    if (isFlagMode) {
+      const newGrid = [...grid.map(row => [...row])];
+      newGrid[r][c].isFlagged = !newGrid[r][c].isFlagged;
+      setGrid(newGrid);
+      return;
+    }
+
+    if (grid[r][c].isFlagged) return;
+    
     const newGrid = [...grid.map(row => [...row])];
     
     if (newGrid[r][c].isMine) {
@@ -122,10 +132,26 @@ const Minesweeper: React.FC = () => {
 
   return (
     <div className="h-full w-full bg-[#1a1a1a] flex flex-col items-center justify-center p-4 font-mono text-white relative">
-      <div className="mb-4 flex justify-between w-full max-w-[300px]">
-        <span className="text-blue-400 font-bold uppercase tracking-widest">Mines: {MINES_COUNT}</span>
-        {gameOver && <span className="text-red-500 font-bold uppercase animate-pulse">Boom!</span>}
-        {win && <span className="text-green-400 font-bold uppercase animate-bounce">Win!</span>}
+      <div className="mb-4 flex justify-between items-center w-full max-w-[300px]">
+        <span className="text-blue-400 font-bold uppercase tracking-widest text-[10px]">Mines: {MINES_COUNT}</span>
+        
+        <div className="flex bg-black/40 rounded-lg p-0.5 border border-white/5">
+          <button 
+            onClick={() => setIsFlagMode(false)}
+            className={`px-3 py-1 rounded-md text-[9px] font-bold uppercase transition-all ${!isFlagMode ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20' : 'text-white/40'}`}
+          >
+            Reveal
+          </button>
+          <button 
+            onClick={() => setIsFlagMode(true)}
+            className={`px-3 py-1 rounded-md text-[9px] font-bold uppercase transition-all ${isFlagMode ? 'bg-red-500 text-white shadow-lg shadow-red-500/20' : 'text-white/40'}`}
+          >
+            Flag
+          </button>
+        </div>
+
+        {gameOver && <span className="text-red-500 font-bold uppercase animate-pulse text-[10px]">Boom!</span>}
+        {win && <span className="text-green-400 font-bold uppercase animate-bounce text-[10px]">Win!</span>}
       </div>
 
       <div className="relative">
@@ -168,9 +194,17 @@ const Minesweeper: React.FC = () => {
         )}
       </div>
 
-      <div className="mt-6">
-        <p className="text-[10px] text-white/40 flex items-center italic uppercase tracking-widest">
-          Left-click to Reveal • Right-click to Flag • Enter to Restart
+      <div className="mt-6 flex flex-col items-center gap-2">
+        {(gameOver || win) && (
+          <button 
+            onClick={initGrid}
+            className="md:hidden px-6 py-2 bg-blue-500 text-black font-bold uppercase tracking-widest rounded-lg active:scale-95 transition-transform text-xs"
+          >
+            New Game
+          </button>
+        )}
+        <p className="text-[10px] text-white/40 flex items-center italic uppercase tracking-widest text-center">
+          {window.innerWidth < 768 ? 'Toggle Flag/Reveal Mode to play' : 'Left-click: Reveal • Right-click: Flag • Enter: Restart'}
         </p>
       </div>
     </div>

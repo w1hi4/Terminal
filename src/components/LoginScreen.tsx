@@ -36,7 +36,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onPowerOff, onRestar
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className={`relative w-[380px] p-10 bg-[#1a1a1a]/40 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] shadow-2xl text-center ${error ? 'animate-shake' : ''}`}
+        className={`relative w-[90vw] max-w-[380px] p-6 sm:p-10 bg-[#1a1a1a]/40 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] shadow-2xl text-center ${error ? 'animate-shake' : ''}`}
       >
         <div className="mb-8 flex justify-center">
           <motion.div 
