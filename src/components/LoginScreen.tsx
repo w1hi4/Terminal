@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { User, Lock, ArrowRight, Power, RotateCcw } from 'lucide-react';
 import { motion } from 'motion/react';
+import { playSound } from '../utils/soundUtils';
 
 interface LoginScreenProps {
   onLogin: () => void;
@@ -15,8 +16,10 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onPowerOff, onRestar
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (password.toLowerCase() === 'kali' || password.toLowerCase() === 'w1hi4') {
+      playSound('SUCCESS');
       onLogin();
     } else {
+      playSound('ERROR');
       setError(true);
       setTimeout(() => setError(false), 500);
     }
@@ -99,7 +102,10 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onPowerOff, onRestar
         
         <div className="mt-12 pt-8 border-t border-white/5 flex justify-center gap-8 text-white/20">
           <button 
-            onClick={onPowerOff} 
+            onClick={() => {
+              playSound('CLICK');
+              onPowerOff();
+            }} 
             className="flex flex-col items-center gap-2 group transition-all"
           >
             <div className="p-2 rounded-lg group-hover:bg-red-500/10 group-hover:text-red-500 transition-all">
@@ -108,7 +114,10 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onPowerOff, onRestar
             <span className="text-[9px] uppercase tracking-widest group-hover:text-white/40">Power</span>
           </button>
           <button 
-            onClick={onRestart} 
+            onClick={() => {
+              playSound('CLICK');
+              onRestart();
+            }} 
             className="flex flex-col items-center gap-2 group transition-all"
           >
             <div className="p-2 rounded-lg group-hover:bg-blue-500/10 group-hover:text-blue-400 transition-all">
@@ -120,8 +129,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onPowerOff, onRestar
       </motion.div>
 
       {/* Footer Info */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/10 text-[10px] uppercase tracking-[0.5em] font-bold">
-        w1hi4 OS Security Layer v1.0
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/20 text-[10px] uppercase tracking-[0.5em] font-bold whitespace-nowrap">
+        bl4ck30x OS Security Layer v1.0
       </div>
     </div>
   );

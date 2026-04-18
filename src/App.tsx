@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { 
   Terminal as TerminalIcon, 
@@ -39,9 +39,14 @@ import Weather from './components/Weather';
 import CryptoTracker from './components/CryptoTracker';
 import AIAssistant from './components/AIAssistant';
 
+import { playSound } from './utils/soundUtils';
+
 const DesktopIcon = ({ icon: Icon, label, onClick, color = "text-white/80" }: any) => (
   <button 
-    onClick={onClick}
+    onClick={() => {
+      playSound('CLICK');
+      onClick();
+    }}
     className="flex flex-col items-center gap-1 p-2 rounded hover:bg-white/10 active:bg-white/20 transition-all group w-24 select-none outline-none focus:ring-1 focus:ring-white/20"
   >
     <div className={`p-3 rounded-lg bg-black/20 backdrop-blur-sm border border-white/5 group-hover:border-white/20 transition-all ${color}`}>
@@ -68,6 +73,7 @@ function App() {
   const [minimizedWindows, setMinimizedWindows] = useState<Set<string>>(new Set());
   const [time, setTime] = useState(new Date());
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const desktopRef = useRef<HTMLDivElement>(null);
 
   const handleOnComplete = React.useCallback(() => {
     setBooting(false);
@@ -255,56 +261,58 @@ function App() {
             </div>
           </div>
 
-          {/* Desktop Content */}
-          <div className="p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-flow-col md:grid-rows-[repeat(auto-fill,100px)] gap-2 sm:gap-4 h-[calc(100vh-32px)] content-start auto-cols-[100px] overflow-y-auto overflow-x-hidden md:overflow-x-auto">
-            <DesktopIcon 
-              icon={User} 
-              label="bl4ck30x Profile" 
-              color="text-blue-500"
-              onClick={() => setIsPortfolioOpen(true)}
-            />
-            <DesktopIcon 
-              icon={Activity} 
-              label="System Health" 
-              color="text-green-400"
-              onClick={() => setIsSystemMonitorOpen(true)}
-            />
-            <DesktopIcon 
-              icon={Sun} 
-              label="Weather" 
-              color="text-yellow-400"
-              onClick={() => setIsWeatherOpen(true)}
-            />
-            <DesktopIcon 
-              icon={TrendingUp} 
-              label="Market Pulse" 
-              color="text-orange-400"
-              onClick={() => setIsCryptoOpen(true)}
-            />
-            <DesktopIcon 
-              icon={TerminalIcon} 
-              label="Terminal Emulator" 
-              onClick={() => setIsTerminalOpen(true)}
-              color="text-[#00ff00]"
-            />
-            <DesktopIcon 
-              icon={Gamepad2} 
-              label="Snake Game" 
-              onClick={() => setIsSnakeOpen(true)}
-              color="text-green-500"
-            />
-            <DesktopIcon 
-              icon={Gamepad2} 
-              label="Minesweeper" 
-              onClick={() => setIsMinesweeperOpen(true)}
-              color="text-red-500"
-            />
-            <DesktopIcon 
-              icon={Gamepad2} 
-              label="CyberRunner" 
-              onClick={() => openWindow(setIsCyberRunnerOpen, 'cyberrunner')}
-              color="text-blue-400"
-            />
+          {/* Desktop Content Grid */}
+          <div ref={desktopRef} className="absolute inset-0 z-0 h-full w-full pointer-events-none">
+            <div className="absolute inset-x-0 top-8 bottom-0 p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-flow-col md:grid-rows-[repeat(auto-fill,100px)] gap-2 sm:gap-4 content-start auto-cols-[100px] overflow-y-auto overflow-x-hidden md:overflow-x-auto pointer-events-auto">
+              <DesktopIcon 
+                icon={User} 
+                label="bl4ck30x Profile" 
+                color="text-blue-500"
+                onClick={() => setIsPortfolioOpen(true)}
+              />
+              <DesktopIcon 
+                icon={Activity} 
+                label="System Health" 
+                color="text-green-400"
+                onClick={() => setIsSystemMonitorOpen(true)}
+              />
+              <DesktopIcon 
+                icon={Sun} 
+                label="Weather" 
+                color="text-yellow-400"
+                onClick={() => setIsWeatherOpen(true)}
+              />
+              <DesktopIcon 
+                icon={TrendingUp} 
+                label="Market Pulse" 
+                color="text-orange-400"
+                onClick={() => setIsCryptoOpen(true)}
+              />
+              <DesktopIcon 
+                icon={TerminalIcon} 
+                label="Terminal Emulator" 
+                onClick={() => setIsTerminalOpen(true)}
+                color="text-[#00ff00]"
+              />
+              <DesktopIcon 
+                icon={Gamepad2} 
+                label="Snake Game" 
+                onClick={() => setIsSnakeOpen(true)}
+                color="text-green-500"
+              />
+              <DesktopIcon 
+                icon={Gamepad2} 
+                label="Minesweeper" 
+                onClick={() => setIsMinesweeperOpen(true)}
+                color="text-red-500"
+              />
+              <DesktopIcon 
+                icon={Gamepad2} 
+                label="CyberRunner" 
+                onClick={() => openWindow(setIsCyberRunnerOpen, 'cyberrunner')}
+                color="text-blue-400"
+              />
+            </div>
           </div>
 
           {/* Windows Layer */}
@@ -316,6 +324,7 @@ function App() {
                 onClose={() => setIsTerminalOpen(false)}
                 onMinimize={() => toggleMinimize('terminal')}
                 icon={<TerminalIcon className="w-4 h-4" />}
+                dragConstraints={desktopRef}
               >
                 <Terminal />
               </Window>
@@ -323,10 +332,11 @@ function App() {
             {isBrowserOpen && !minimizedWindows.has('browser') && (
               <Window 
                 key="browser-window"
-                title="Chromium - GitHub" 
+                title="Cyber-Browser v1.0" 
                 onClose={() => setIsBrowserOpen(false)}
                 onMinimize={() => toggleMinimize('browser')}
-                icon={<Globe className="w-4 h-4" />}
+                icon={<Globe className="w-4 h-4 text-blue-400" />}
+                dragConstraints={desktopRef}
               >
                 <Browser />
               </Window>
@@ -334,10 +344,11 @@ function App() {
             {isSnakeOpen && !minimizedWindows.has('snake') && (
               <Window 
                 key="snake-window"
-                title="Snake Game" 
+                title="Neural Snake v4" 
                 onClose={() => setIsSnakeOpen(false)}
                 onMinimize={() => toggleMinimize('snake')}
-                icon={<Gamepad2 className="w-4 h-4" />}
+                icon={<Gamepad2 className="w-4 h-4 text-green-500" />}
+                dragConstraints={desktopRef}
               >
                 <SnakeGame />
               </Window>
@@ -345,10 +356,11 @@ function App() {
             {isMinesweeperOpen && !minimizedWindows.has('minesweeper') && (
               <Window 
                 key="minesweeper-window"
-                title="Minesweeper" 
+                title="SecureMines v1.0" 
                 onClose={() => setIsMinesweeperOpen(false)}
                 onMinimize={() => toggleMinimize('minesweeper')}
-                icon={<Gamepad2 className="w-4 h-4" />}
+                icon={<Gamepad2 className="w-4 h-4 text-red-500" />}
+                dragConstraints={desktopRef}
               >
                 <Minesweeper />
               </Window>
@@ -359,7 +371,8 @@ function App() {
                 title="bl4ck30x Portfolio" 
                 onClose={() => setIsPortfolioOpen(false)}
                 onMinimize={() => toggleMinimize('portfolio')}
-                icon={<FileText className="w-4 h-4" />}
+                icon={<FileText className="w-4 h-4 text-blue-400" />}
+                dragConstraints={desktopRef}
               >
                 <PortfolioText />
               </Window>
@@ -371,6 +384,7 @@ function App() {
                 onClose={() => setIsSystemMonitorOpen(false)}
                 onMinimize={() => toggleMinimize('system-monitor')}
                 icon={<Activity className="w-4 h-4 text-green-400" />}
+                dragConstraints={desktopRef}
               >
                 <SystemMonitor />
               </Window>
@@ -382,6 +396,7 @@ function App() {
                 onClose={() => setIsWeatherOpen(false)}
                 onMinimize={() => toggleMinimize('weather')}
                 icon={<Sun className="w-4 h-4 text-yellow-400" />}
+                dragConstraints={desktopRef}
               >
                 <Weather />
               </Window>
@@ -393,6 +408,7 @@ function App() {
                 onClose={() => setIsCryptoOpen(false)}
                 onMinimize={() => toggleMinimize('crypto')}
                 icon={<TrendingUp className="w-4 h-4 text-orange-400" />}
+                dragConstraints={desktopRef}
               >
                 <CryptoTracker />
               </Window>
@@ -403,7 +419,8 @@ function App() {
                 title="CyberRunner v1.0" 
                 onClose={() => setIsCyberRunnerOpen(false)}
                 onMinimize={() => toggleMinimize('cyberrunner')}
-                icon={<Gamepad2 className="w-4 h-4" />}
+                icon={<Gamepad2 className="w-4 h-4 text-blue-400" />}
+                dragConstraints={desktopRef}
               >
                 <CyberRunner />
               </Window>
@@ -440,7 +457,10 @@ function App() {
             </AnimatePresence>
 
             <button
-              onClick={() => setIsAIAssistantOpen(!isAIAssistantOpen)}
+              onClick={() => {
+                playSound('CLICK');
+                setIsAIAssistantOpen(!isAIAssistantOpen);
+              }}
               className={`p-4 rounded-2xl shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 group relative ${
                 isAIAssistantOpen 
                   ? 'bg-red-500/20 border border-red-500/30' 
@@ -463,53 +483,27 @@ function App() {
 
           {/* Bottom Dock */}
           <div className="fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl z-40 max-w-[95vw] overflow-x-auto scrollbar-hide">
-            <button 
-              onClick={() => openWindow(setIsTerminalOpen, 'terminal')}
-              className="p-2.5 sm:p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-[#00ff00] shrink-0"
-            >
-              <TerminalIcon className="w-5 h-5 sm:w-6 sm:h-6" />
-            </button>
-            <button 
-              onClick={() => openWindow(setIsBrowserOpen, 'browser')}
-              className="p-2.5 sm:p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-blue-400 shrink-0"
-            >
-              <Globe className="w-5 h-5 sm:w-6 sm:h-6" />
-            </button>
-            <button 
-              onClick={() => openWindow(setIsSystemMonitorOpen, 'system-monitor')}
-              className="p-2.5 sm:p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-green-400 shrink-0"
-              title="System Monitor"
-            >
-              <Cpu className="w-5 h-5 sm:w-6 sm:h-6" />
-            </button>
-            <button 
-              onClick={() => openWindow(setIsWeatherOpen, 'weather')}
-              className="p-2.5 sm:p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-yellow-400 shrink-0"
-              title="Weather"
-            >
-              <Sun className="w-5 h-5 sm:w-6 sm:h-6" />
-            </button>
-            <button 
-              onClick={() => openWindow(setIsCryptoOpen, 'crypto')}
-              className="p-2.5 sm:p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-orange-400 shrink-0"
-              title="Market Pulse"
-            >
-              <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6" />
-            </button>
-            <button 
-              onClick={() => openWindow(setIsPortfolioOpen, 'portfolio')}
-              className="p-2.5 sm:p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-blue-400 shrink-0"
-              title="Portfolio"
-            >
-              <Folder className="w-5 h-5 sm:w-6 sm:h-6" />
-            </button>
-            <button 
-              onClick={() => openWindow(setIsSnakeOpen, 'snake')}
-              className="p-2.5 sm:p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-green-400 shrink-0"
-              title="Snake"
-            >
-              <Gamepad2 className="w-5 h-5 sm:w-6 sm:h-6" />
-            </button>
+            {[
+              { id: 'terminal', icon: TerminalIcon, color: 'text-[#00ff00]', setter: setIsTerminalOpen, title: 'Terminal' },
+              { id: 'browser', icon: Globe, color: 'text-blue-400', setter: setIsBrowserOpen, title: 'Browser' },
+              { id: 'system-monitor', icon: Cpu, color: 'text-green-400', setter: setIsSystemMonitorOpen, title: 'System Monitor' },
+              { id: 'weather', icon: Sun, color: 'text-yellow-400', setter: setIsWeatherOpen, title: 'Weather' },
+              { id: 'crypto', icon: TrendingUp, color: 'text-orange-400', setter: setIsCryptoOpen, title: 'Market Pulse' },
+              { id: 'portfolio', icon: Folder, color: 'text-blue-400', setter: setIsPortfolioOpen, title: 'Portfolio' },
+              { id: 'snake', icon: Gamepad2, color: 'text-green-400', setter: setIsSnakeOpen, title: 'Snake' },
+            ].map((app) => (
+              <button 
+                key={app.id}
+                onClick={() => {
+                  playSound('CLICK');
+                  openWindow(app.setter, app.id);
+                }}
+                className={`p-2.5 sm:p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 ${app.color} shrink-0`}
+                title={app.title}
+              >
+                <app.icon className="w-5 h-5 sm:w-6 sm:h-6" />
+              </button>
+            ))}
           </div>
         </motion.div>
       )}

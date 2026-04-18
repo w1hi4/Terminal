@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Bot, User, ShieldAlert } from 'lucide-react';
 import { motion } from 'motion/react';
+import { playSound } from '../utils/soundUtils';
 
 interface Message {
   id: string;
@@ -111,6 +112,7 @@ const AIAssistant: React.FC = () => {
   };
 
   const processInput = (text: string) => {
+    playSound('CLICK');
     const userMessage: Message = {
       id: Date.now().toString(),
       text: text,
@@ -122,6 +124,7 @@ const AIAssistant: React.FC = () => {
     setIsTyping(true);
 
     setTimeout(() => {
+      playSound('NOTIFICATION');
       const aiText = getLocalResponse(text);
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),

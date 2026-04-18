@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { X, Minus, Square } from 'lucide-react';
+import { playSound } from '../utils/soundUtils';
 
 interface WindowProps {
   title: string;
@@ -8,10 +9,20 @@ interface WindowProps {
   onMinimize?: () => void;
   children: React.ReactNode;
   icon?: React.ReactNode;
+  dragConstraints?: React.RefObject<HTMLDivElement>;
 }
 
-const Window: React.FC<WindowProps> = ({ title, onClose, onMinimize, children, icon }) => {
+const Window: React.FC<WindowProps> = ({ title, onClose, onMinimize, children, icon, dragConstraints }) => {
   const [isMaximized, setIsMaximized] = useState(false);
+
+  useEffect(() => {
+    playSound('WINDOW_OPEN');
+  }, []);
+
+  const handleClose = () => {
+    playSound('WINDOW_CLOSE');
+    onClose();
+  };
 
   return (
     <motion.div
@@ -20,10 +31,12 @@ const Window: React.FC<WindowProps> = ({ title, onClose, onMinimize, children, i
       exit={{ opacity: 0, scale: 0.9, y: 20 }}
       drag={!isMaximized}
       dragMomentum={false}
+      dragConstraints={dragConstraints}
+      dragElastic={0}
       className={`absolute z-50 flex flex-col bg-[#1c1c1c] border border-white/10 rounded-lg shadow-2xl overflow-hidden ${
         isMaximized 
-          ? 'inset-0 m-0 rounded-none' 
-          : 'w-[90vw] max-w-[800px] h-[70vh] max-h-[600px] top-10 left-[5vw] md:top-20 md:left-20'
+          ? 'inset-0 m-0 rounded-none w-full h-full' 
+          : 'w-[92vw] sm:w-[90vw] max-w-[800px] h-[65vh] sm:h-[70vh] max-h-[600px] top-12 left-[4vw] sm:left-[5vw] md:top-20 md:left-20'
       }`}
     >
       {/* Window Header */}
@@ -34,19 +47,25 @@ const Window: React.FC<WindowProps> = ({ title, onClose, onMinimize, children, i
         </div>
         <div className="flex items-center gap-3">
           <button 
-            onClick={onMinimize}
+            onClick={() => {
+              playSound('CLICK');
+              onMinimize?.();
+            }}
             className="text-white/40 hover:text-white transition-colors p-1 rounded hover:bg-white/5"
           >
             <Minus className="w-3.5 h-3.5" />
           </button>
           <button 
-            onClick={() => setIsMaximized(!isMaximized)}
+            onClick={() => {
+              playSound('CLICK');
+              setIsMaximized(!isMaximized);
+            }}
             className="text-white/40 hover:text-white transition-colors p-1 rounded hover:bg-white/5"
           >
             <Square className="w-3 h-3" />
           </button>
           <button 
-            onClick={onClose}
+            onClick={handleClose}
             className="text-white/40 hover:text-white transition-colors p-1 rounded hover:bg-red-500/80"
           >
             <X className="w-4 h-4" />

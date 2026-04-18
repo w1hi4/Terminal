@@ -54,6 +54,10 @@ export const COMMANDS: CommandRegistry = {
     description: 'Information about Wahiduddin',
     action: () => 'Wahiduddin Samani is a Full-Stack Developer specializing in real-time systems, security-focused applications, and scalable backend architecture. Based in Mumbai, India.'
   },
+  skills: {
+    description: 'Alias for techstack',
+    action: () => COMMANDS.techstack.action()
+  },
   clear: {
     description: 'Clear the terminal screen',
     action: () => '' // Handled in the terminal component

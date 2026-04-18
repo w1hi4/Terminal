@@ -53,9 +53,12 @@ const CommandInput: React.FC<CommandInputProps> = ({ onCommand, history }) => {
   };
 
   return (
-    <div className="flex items-center gap-2 font-mono">
-      <div className="flex items-center select-none">
-        <span className="text-[#3b82f6] font-bold">bl4ck30x@kali</span>
+    <div className="flex items-start gap-1.5 sm:gap-2 font-mono mt-2 overflow-hidden">
+      <div className="flex items-center select-none shrink-0 opacity-90 whitespace-nowrap pt-0.5 text-[10px] sm:text-xs">
+        <span className="text-[#3b82f6] font-bold">
+          <span className="hidden xs:inline">bl4ck30x@kali</span>
+          <span className="xs:hidden">w1hi4</span>
+        </span>
         <span className="text-white">:</span>
         <span className="text-[#3b82f6] font-bold">~</span>
         <span className="text-white">$</span>
@@ -64,7 +67,7 @@ const CommandInput: React.FC<CommandInputProps> = ({ onCommand, history }) => {
         ref={inputRef}
         type="text"
         autoFocus
-        className="flex-1 bg-transparent border-none outline-none text-[#00ff00] caret-[#00ff00] selection:bg-[#00ff00]/30"
+        className="flex-1 bg-transparent border-none outline-none text-[#00ff00] caret-[#00ff00] selection:bg-[#00ff00]/30 min-w-0 text-[10px] sm:text-xs"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={handleKeyDown}
