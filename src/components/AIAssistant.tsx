@@ -12,36 +12,50 @@ interface Message {
 const KNOWLEDGE_BASE = [
   {
     category: 'identity',
-    keywords: ['what are you', 'who are you', 'your name', 'purpose', 'assistant', 'bot', 'ai'],
-    response: "I am the bl4ck30x Intelligence System, a localized neural core engineered by Wahiduddin Samani. My purpose is to provide high-fidelity data regarding his professional expertise, projects, and the architecture of this OS simulation."
+    id: 'ai_core',
+    label: 'AI System',
+    keywords: ['what are you', 'who are you', 'your name', 'purpose', 'assistant', 'bot', 'ai', 'about you', 'system'],
+    response: "I am the bl4ck30x Intelligence System, a localized neural core engineered by Wahiduddin Samani. My purpose is to provide data regarding his professional expertise, projects, and the architecture of this OS simulation."
   },
   {
     category: 'creator',
-    keywords: ['who is wahiduddin', 'creator', 'owner', 'samani', 'blackbox', 'bl4ck30x', 'who made this', 'author', 'developer'],
+    id: 'who_is',
+    label: 'About Admin',
+    keywords: ['who is wahiduddin', 'creator', 'owner', 'samani', 'blackbox', 'bl4ck30x', 'who made this', 'author', 'developer', 'wahid', 'admin'],
     response: "Wahiduddin Samani (bl4ck30x) is an elite Lead Developer and Security Researcher. He specializes in bridging complex frontend engineering with deep-level cybersecurity and DevSecOps. He is the sole architect of this digital environment."
   },
   {
     category: 'stack',
-    keywords: ['skills', 'stack', 'languages', 'tech', 'expert', 'coding', 'experience', 'programming', 'javascript', 'typescript', 'react', 'python', 'node'],
+    id: 'skills',
+    label: 'Skills Dossier',
+    keywords: ['skills', 'stack', 'languages', 'tech', 'expert', 'coding', 'experience', 'programming', 'javascript', 'typescript', 'react', 'python', 'node', 'what skills'],
     response: "Technical Dossier for Wahiduddin Samani:\n• Frontend: Master of React & TypeScript with high-fidelity UI/UX design.\n• Backend: Scalable Node.js, Python, and efficient API architecture.\n• Security: Expert in Kali Linux, Penetration Testing, and OWASP standards.\n• Operations: Advanced DevSecOps workflows and Cloud Security."
   },
   {
     category: 'projects',
-    keywords: ['projects', 'portfolio', 'work', 'build', 'apps', 'terminal', 'game', 'cyberrunner', 'crypto', 'tracker', 'browser'],
+    id: 'projects',
+    label: 'View Projects',
+    keywords: ['projects', 'portfolio', 'work', 'build', 'apps', 'terminal', 'game', 'cyberrunner', 'crypto', 'tracker', 'browser', 'show projects'],
     response: "Active Systems in this OS Portfolio:\n1. LINUX TERMINAL: A functional console for system interaction.\n2. CRYPTO PULSE: Real-time digital asset monitoring.\n3. CYBERRUNNER: A futuristic high-performance game logic showcase.\n4. SANDBOX BROWSER: A secure web simulation environment.\nAll modules were engineered from the ground up by Wahiduddin."
   },
   {
     category: 'career',
-    keywords: ['hire', 'contact', 'job', 'work with', 'availability', 'resume', 'cv', 'email', 'opportunity'],
+    id: 'career',
+    label: 'Career Status',
+    keywords: ['hire', 'contact', 'job', 'work with', 'availability', 'resume', 'cv', 'email', 'opportunity', 'career', 'status', 'career status'],
     response: "Wahiduddin is currently scanning for high-impact opportunities in Lead Development or DevSecOps. His unique cross-discipline expertise is a critical asset for teams requiring both performance and security. Contact protocols are available via the 'Portfolio' icon on the desktop."
   },
   {
     category: 'architecture',
-    keywords: ['how was this made', 'website built', 'react', 'tailwind', 'code', 'source', 'framework'],
+    id: 'architecture',
+    label: 'Architecture',
+    keywords: ['how was this made', 'website built', 'react', 'tailwind', 'code', 'source', 'framework', 'system architecture', 'architecture'],
     response: "This OS simulation is built using a modern React 19 + TypeScript stack, styled with Tailwind CSS v4, and powered by Motion for high-fidelity animations. It utilizes a custom window management system to simulate a desktop environment."
   },
   {
     category: 'greetings',
+    id: 'hello',
+    label: 'Greetings',
     keywords: ['hi', 'hello', 'hey', 'greetings', 'sup', 'yo', 'good morning', 'good evening'],
     response: "Neural link established. System status: Nominal. I am the bl4ck30x AI. Specify a data request: 'Skills', 'Projects', or 'Creator Info'."
   }
@@ -51,12 +65,11 @@ const AIAssistant: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Neural link established. bl4ck30x Intelligence online. Awaiting data query...",
+      text: "Neural link established. bl4ck30x Intelligence online. Please select a command category or type your query below.",
       sender: 'ai',
       timestamp: new Date()
     }
   ]);
-  const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
@@ -72,10 +85,13 @@ const AIAssistant: React.FC = () => {
     const lowerQuery = query.toLowerCase().trim();
     if (!lowerQuery) return "Please enter a valid command.";
     
+    // Exact suggested label match (highest priority)
+    const exactLabelMatch = KNOWLEDGE_BASE.find(e => e.label.toLowerCase() === lowerQuery);
+    if (exactLabelMatch) return exactLabelMatch.response;
+
+    // Normal keyword matching
     const words = lowerQuery.split(/[\s,?.!]+/).filter(w => w.length > 0);
-    
-    // Priority 1: High-importance categories (Career, Skills, Projects)
-    const priorityOrder = ['career', 'stack', 'projects', 'creator', 'identity', 'architecture'];
+    const priorityOrder = ['career', 'stack', 'projects', 'creator', 'identity', 'architecture', 'greetings'];
     
     for (const cat of priorityOrder) {
       const entry = KNOWLEDGE_BASE.find(e => e.category === cat);
@@ -85,50 +101,42 @@ const AIAssistant: React.FC = () => {
         if (k.includes(' ')) {
           return lowerQuery.includes(k);
         }
-        // Strict word matching for short words, substring for longer ones
-        return k.length <= 3 ? words.includes(k) : lowerQuery.includes(k);
+        return words.includes(k);
       });
 
       if (matched) return entry.response;
     }
 
-    // Priority 2: Greetings (only if no technical match found)
-    const greetingEntry = KNOWLEDGE_BASE.find(e => e.category === 'greetings');
-    if (greetingEntry?.keywords.some(k => words.includes(k) || lowerQuery.startsWith(k))) {
-      return greetingEntry.response;
-    }
-    
-    return "Query unmatched. Database contains data on: 'Skills', 'Projects', 'Career Status', and 'System Architecture'. Please refine your inquiry.";
+    return "Query unmatched. Please use the command chips above or ask about 'Skills', 'Projects', or 'Career Status'.";
   };
 
-  const handleSend = async () => {
-    if (!input.trim() || isTyping) return;
-
+  const processInput = (text: string) => {
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: input,
+      text: text,
       sender: 'user',
       timestamp: new Date()
     };
 
     setMessages(prev => [...prev, userMessage]);
-    setInput('');
     setIsTyping(true);
 
-    // Simulate "Thinking" time for realism
     setTimeout(() => {
-      const aiText = getLocalResponse(input);
-
+      const aiText = getLocalResponse(text);
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: aiText,
         sender: 'ai',
         timestamp: new Date()
       };
-
       setMessages(prev => [...prev, aiMessage]);
       setIsTyping(false);
-    }, 800);
+    }, 600);
+  };
+
+  const handleSuggestionClick = (label: string) => {
+    if (isTyping) return;
+    processInput(label);
   };
 
   return (
@@ -193,24 +201,24 @@ const AIAssistant: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="p-4 bg-black/60 border-t border-white/5">
-        <div className="relative group">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Type your command..."
-            className="w-full bg-white/5 border border-white/10 rounded-xl pl-4 pr-12 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500/50 transition-all placeholder:text-white/20"
-          />
-          <button
-            onClick={handleSend}
-            disabled={!input.trim() || isTyping}
-            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-30 disabled:hover:bg-blue-600 transition-all"
-          >
-            <Send className="w-4 h-4" />
-          </button>
+      <div className="p-4 bg-black/60 border-t border-white/5 space-y-4">
+        <div className="text-[9px] text-white/40 uppercase tracking-widest font-bold mb-2">
+          Select Command Protocol:
         </div>
+        {/* Suggestion Chips */}
+        <div className="flex flex-wrap gap-2">
+          {KNOWLEDGE_BASE.filter(k => k.category !== 'greetings').map((entry) => (
+            <button
+              key={entry.id}
+              onClick={() => handleSuggestionClick(entry.label)}
+              disabled={isTyping}
+              className="flex-1 min-w-[140px] px-3 py-3 rounded-xl bg-white/5 border border-white/10 text-[10px] text-white/70 hover:text-blue-400 hover:bg-blue-400/10 hover:border-blue-500/30 transition-all uppercase tracking-wider font-bold text-center disabled:opacity-30"
+            >
+              {entry.label}
+            </button>
+          ))}
+        </div>
+
         <div className="mt-2 text-[8px] text-center text-white/20 uppercase tracking-[0.3em]">
           End-to-End Cryptography Enabled
         </div>
