@@ -10,6 +10,7 @@ import {
   Volume2, 
   Battery, 
   Search,
+  X,
   LayoutGrid,
   Monitor,
   Gamepad2,
@@ -21,7 +22,8 @@ import {
   Activity,
   TrendingUp,
   Sun,
-  ShieldAlert
+  ShieldAlert,
+  Bot
 } from 'lucide-react';
 import Terminal from './components/Terminal';
 import Window from './components/Window';
@@ -35,6 +37,7 @@ import CyberRunner from './components/CyberRunner';
 import SystemMonitor from './components/SystemMonitor';
 import Weather from './components/Weather';
 import CryptoTracker from './components/CryptoTracker';
+import AIAssistant from './components/AIAssistant';
 
 const DesktopIcon = ({ icon: Icon, label, onClick, color = "text-white/80" }: any) => (
   <button 
@@ -61,6 +64,8 @@ function App() {
   const [isSystemMonitorOpen, setIsSystemMonitorOpen] = useState(false);
   const [isWeatherOpen, setIsWeatherOpen] = useState(false);
   const [isCryptoOpen, setIsCryptoOpen] = useState(false);
+  const [isAIAssistantOpen, setIsAIAssistantOpen] = useState(false);
+  const [minimizedWindows, setMinimizedWindows] = useState<Set<string>>(new Set());
   const [time, setTime] = useState(new Date());
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
@@ -100,12 +105,32 @@ function App() {
     setIsSystemMonitorOpen(false);
     setIsWeatherOpen(false);
     setIsCryptoOpen(false);
+    setIsAIAssistantOpen(false);
+    setMinimizedWindows(new Set());
   };
 
   const handlePowerOff = () => {
     setIsPoweredOff(true);
     setIsLoggedIn(false);
     setBooting(true);
+  };
+
+  const toggleMinimize = (windowId: string) => {
+    setMinimizedWindows(prev => {
+      const next = new Set(prev);
+      if (next.has(windowId)) next.delete(windowId);
+      else next.add(windowId);
+      return next;
+    });
+  };
+
+  const openWindow = (openFn: (val: boolean) => void, windowId: string) => {
+    openFn(true);
+    setMinimizedWindows(prev => {
+      const next = new Set(prev);
+      next.delete(windowId);
+      return next;
+    });
   };
 
   return (
@@ -281,98 +306,107 @@ function App() {
             <DesktopIcon 
               icon={Gamepad2} 
               label="CyberRunner" 
-              onClick={() => setIsCyberRunnerOpen(true)}
+              onClick={() => openWindow(setIsCyberRunnerOpen, 'cyberrunner')}
               color="text-blue-400"
             />
           </div>
 
           {/* Windows Layer */}
           <AnimatePresence>
-            {isTerminalOpen && (
+            {isTerminalOpen && !minimizedWindows.has('terminal') && (
               <Window 
                 key="terminal-window"
                 title="bl4ck30x OS Terminal" 
                 onClose={() => setIsTerminalOpen(false)}
+                onMinimize={() => toggleMinimize('terminal')}
                 icon={<TerminalIcon className="w-4 h-4" />}
               >
                 <Terminal />
               </Window>
             )}
-            {isBrowserOpen && (
+            {isBrowserOpen && !minimizedWindows.has('browser') && (
               <Window 
                 key="browser-window"
                 title="Chromium - GitHub" 
                 onClose={() => setIsBrowserOpen(false)}
+                onMinimize={() => toggleMinimize('browser')}
                 icon={<Globe className="w-4 h-4" />}
               >
                 <Browser />
               </Window>
             )}
-            {isSnakeOpen && (
+            {isSnakeOpen && !minimizedWindows.has('snake') && (
               <Window 
                 key="snake-window"
                 title="Snake Game" 
                 onClose={() => setIsSnakeOpen(false)}
+                onMinimize={() => toggleMinimize('snake')}
                 icon={<Gamepad2 className="w-4 h-4" />}
               >
                 <SnakeGame />
               </Window>
             )}
-            {isMinesweeperOpen && (
+            {isMinesweeperOpen && !minimizedWindows.has('minesweeper') && (
               <Window 
                 key="minesweeper-window"
                 title="Minesweeper" 
                 onClose={() => setIsMinesweeperOpen(false)}
+                onMinimize={() => toggleMinimize('minesweeper')}
                 icon={<Gamepad2 className="w-4 h-4" />}
               >
                 <Minesweeper />
               </Window>
             )}
-            {isPortfolioOpen && (
+            {isPortfolioOpen && !minimizedWindows.has('portfolio') && (
               <Window 
                 key="portfolio-window"
                 title="bl4ck30x Portfolio" 
                 onClose={() => setIsPortfolioOpen(false)}
+                onMinimize={() => toggleMinimize('portfolio')}
                 icon={<FileText className="w-4 h-4" />}
               >
                 <PortfolioText />
               </Window>
             )}
-            {isSystemMonitorOpen && (
+            {isSystemMonitorOpen && !minimizedWindows.has('system-monitor') && (
               <Window 
                 key="system-monitor-window"
                 title="System Monitor - [Pulse]" 
                 onClose={() => setIsSystemMonitorOpen(false)}
+                onMinimize={() => toggleMinimize('system-monitor')}
                 icon={<Activity className="w-4 h-4 text-green-400" />}
               >
                 <SystemMonitor />
               </Window>
             )}
-            {isWeatherOpen && (
+            {isWeatherOpen && !minimizedWindows.has('weather') && (
               <Window 
                 key="weather-window"
                 title="Weather - [Atmosphere]" 
                 onClose={() => setIsWeatherOpen(false)}
+                onMinimize={() => toggleMinimize('weather')}
                 icon={<Sun className="w-4 h-4 text-yellow-400" />}
               >
                 <Weather />
               </Window>
             )}
-            {isCryptoOpen && (
+            {isCryptoOpen && !minimizedWindows.has('crypto') && (
               <Window 
                 key="crypto-window"
                 title="Market Pulse - [Crypto]" 
                 onClose={() => setIsCryptoOpen(false)}
+                onMinimize={() => toggleMinimize('crypto')}
                 icon={<TrendingUp className="w-4 h-4 text-orange-400" />}
               >
                 <CryptoTracker />
               </Window>
             )}
-            {isCyberRunnerOpen && (
+            {isCyberRunnerOpen && !minimizedWindows.has('cyberrunner') && (
               <Window 
                 key="cyberrunner-window"
                 title="CyberRunner v1.0" 
                 onClose={() => setIsCyberRunnerOpen(false)}
+                onMinimize={() => toggleMinimize('cyberrunner')}
                 icon={<Gamepad2 className="w-4 h-4" />}
               >
                 <CyberRunner />
@@ -380,64 +414,103 @@ function App() {
             )}
           </AnimatePresence>
 
+          {/* Professional Floating AI Assistant Widget */}
+          <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[1000] flex flex-col items-end gap-3 md:gap-4 w-full max-w-[calc(100vw-32px)] md:w-auto">
+            <AnimatePresence>
+              {isAIAssistantOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20, scale: 0.95, transformOrigin: 'bottom right' }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                  className="w-full md:w-[400px] h-[70vh] md:h-[600px] bg-[#0d0d0d]/80 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col"
+                >
+                  <div className="px-4 py-3 bg-blue-500/10 border-b border-white/5 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                      <span className="text-xs font-bold text-white/90 uppercase tracking-widest">bl4ck30x Intelligence</span>
+                    </div>
+                    <button 
+                      onClick={() => setIsAIAssistantOpen(false)}
+                      className="p-1 hover:bg-white/10 rounded-lg transition-colors text-white/40 hover:text-white"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <div className="flex-1 overflow-hidden">
+                    <AIAssistant />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <button
+              onClick={() => setIsAIAssistantOpen(!isAIAssistantOpen)}
+              className={`p-4 rounded-2xl shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 group relative ${
+                isAIAssistantOpen 
+                  ? 'bg-red-500/20 border border-red-500/30' 
+                  : 'bg-blue-600 border border-blue-400/50 shadow-[0_0_30px_rgba(37,99,235,0.4)]'
+              }`}
+            >
+              {isAIAssistantOpen ? (
+                <X className="w-7 h-7 text-white" />
+              ) : (
+                <>
+                  <Bot className="w-7 h-7 text-white" />
+                  <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500 border border-white/20"></span>
+                  </span>
+                </>
+              )}
+            </button>
+          </div>
+
           {/* Bottom Dock */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 p-2 bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl z-40">
             <button 
-              onClick={() => setIsTerminalOpen(true)}
+              onClick={() => openWindow(setIsTerminalOpen, 'terminal')}
               className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-[#00ff00]"
             >
               <TerminalIcon className="w-6 h-6" />
             </button>
             <button 
-              onClick={() => setIsBrowserOpen(true)}
+              onClick={() => openWindow(setIsBrowserOpen, 'browser')}
               className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-blue-400"
             >
               <Globe className="w-6 h-6" />
             </button>
             <button 
-              onClick={() => setIsSystemMonitorOpen(true)}
+              onClick={() => openWindow(setIsSystemMonitorOpen, 'system-monitor')}
               className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-green-400"
               title="System Monitor"
             >
               <Cpu className="w-6 h-6" />
             </button>
             <button 
-              onClick={() => setIsWeatherOpen(true)}
+              onClick={() => openWindow(setIsWeatherOpen, 'weather')}
               className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-yellow-400"
               title="Weather"
             >
               <Sun className="w-6 h-6" />
             </button>
             <button 
-              onClick={() => setIsCryptoOpen(true)}
+              onClick={() => openWindow(setIsCryptoOpen, 'crypto')}
               className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-orange-400"
-              title="Crypto Tracker"
+              title="Market Pulse"
             >
               <TrendingUp className="w-6 h-6" />
             </button>
             <button 
-              onClick={() => setIsPortfolioOpen(true)}
+              onClick={() => openWindow(setIsPortfolioOpen, 'portfolio')}
               className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-yellow-400"
+              title="Portfolio"
             >
               <Folder className="w-6 h-6" />
             </button>
             <button 
-              onClick={() => setIsSnakeOpen(true)}
+              onClick={() => openWindow(setIsSnakeOpen, 'snake')}
               className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-green-400"
-            >
-              <Gamepad2 className="w-6 h-6" />
-            </button>
-            <button 
-              onClick={() => setIsMinesweeperOpen(true)}
-              className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-red-400"
-              title="Minesweeper"
-            >
-              <Gamepad2 className="w-6 h-6" />
-            </button>
-            <button 
-              onClick={() => setIsCyberRunnerOpen(true)}
-              className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-blue-500"
-              title="CyberRunner"
+              title="Snake"
             >
               <Gamepad2 className="w-6 h-6" />
             </button>

@@ -5,11 +5,12 @@ import { X, Minus, Square } from 'lucide-react';
 interface WindowProps {
   title: string;
   onClose: () => void;
+  onMinimize?: () => void;
   children: React.ReactNode;
   icon?: React.ReactNode;
 }
 
-const Window: React.FC<WindowProps> = ({ title, onClose, children, icon }) => {
+const Window: React.FC<WindowProps> = ({ title, onClose, onMinimize, children, icon }) => {
   const [isMaximized, setIsMaximized] = useState(false);
 
   return (
@@ -30,7 +31,10 @@ const Window: React.FC<WindowProps> = ({ title, onClose, children, icon }) => {
           <span className="text-[11px] font-bold text-white/90 tracking-tight uppercase">{title}</span>
         </div>
         <div className="flex items-center gap-3">
-          <button className="text-white/40 hover:text-white transition-colors p-1 rounded hover:bg-white/5">
+          <button 
+            onClick={onMinimize}
+            className="text-white/40 hover:text-white transition-colors p-1 rounded hover:bg-white/5"
+          >
             <Minus className="w-3.5 h-3.5" />
           </button>
           <button 
