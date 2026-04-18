@@ -11,28 +11,34 @@ interface Message {
 
 const KNOWLEDGE_BASE = [
   {
-    keywords: ['hi', 'hello', 'hey', 'greetings'],
-    response: "Greetings, user. Neural link established. I am the bl4ck30x AI. How can I assist you in exploring Wahiduddin's digital grid today?"
-  },
-  {
-    keywords: ['who', 'wahiduddin', 'samani', 'bl4ck30x', 'creator', 'owner'],
+    category: 'who',
+    keywords: ['who', 'wahiduddin', 'samani', 'bl4ck30x', 'creator', 'owner', 'about admin', 'developer'],
     response: "Wahiduddin Samani (bl4ck30x) is the Lead Developer and Security Researcher who engineered this entire OS. He specializes in bridging the gap between high-end frontend engineering and deep cybersecurity."
   },
   {
-    keywords: ['skills', 'tech', 'stack', 'languages', 'know', 'expert'],
-    response: "My creator is a master of the modern web: React, TypeScript, Node.js, and Python. On the security side, he's expert in Kali Linux, Penetration Testing, and DevSecOps."
+    category: 'skills',
+    keywords: ['skills', 'tech', 'stack', 'languages', 'know', 'expert', 'coding', 'experience'],
+    response: "My creator is a master of the modern web: React, TypeScript, Node.js, and Python. On the security side, he's expert in Kali Linux, Penetration Testing, and DevSecOps. He builds secure, high-performance systems."
   },
   {
-    keywords: ['project', 'work', 'build', 'terminal', 'game', 'crypto'],
-    response: "This OS is his primary showcase! It features a Linux-style Terminal, a Real-time Crypto Tracker, a futuristic CyberRunner game, and a sandbox Browser. All built from scratch."
+    category: 'projects',
+    keywords: ['project', 'work', 'build', 'terminal', 'game', 'crypto', 'portfolio', 'browser'],
+    response: "This OS is his primary showcase! It features a Linux-style Terminal, a Real-time Crypto Tracker, a futuristic CyberRunner game, and a sandbox Browser. Everything was hand-coded by him from the ground up."
   },
   {
-    keywords: ['hire', 'contact', 'job', 'work with him'],
-    response: "Wahiduddin is currently open to high-impact roles in DevSecOps and Lead Development. His unique blend of security and frontend mastery makes him a rare asset for any team."
+    category: 'hire',
+    keywords: ['hire', 'contact', 'job', 'work with him', 'resume', 'email'],
+    response: "Wahiduddin is currently open to high-impact roles in DevSecOps and Lead Development. His unique blend of security and frontend mastery makes him a rare asset. You can find his contact details in the 'Portfolio' app."
   },
   {
-    keywords: ['this os', 'what is this', 'website'],
-    response: "You are inside 'bl4ck30x OS'—a living portfolio. It's a high-fidelity web simulation designed to prove that technical power and aesthetic design can coexist."
+    category: 'os',
+    keywords: ['this os', 'what is this', 'website', 'kali', 'linux terminal'],
+    response: "You are inside 'bl4ck30x OS'—a living portfolio. It's a high-fidelity web simulation built with React and Tailwind CSS to prove that technical power and aesthetic design can coexist."
+  },
+  {
+    category: 'greetings',
+    keywords: ['hi ', 'hello', 'hey', 'greetings', 'sup', 'yo'],
+    response: "Greetings, user. Neural link established. I am the bl4ck30x AI. Ask me about Wahiduddin's 'Skills', 'Projects' or 'Who' he is!"
   }
 ];
 
@@ -58,16 +64,43 @@ const AIAssistant: React.FC = () => {
   }, [messages]);
 
   const getLocalResponse = (query: string): string => {
-    const lowerQuery = query.toLowerCase();
+    const lowerQuery = query.toLowerCase().trim();
     
-    // Find the best matching response
+    // Exact word matching to prevent "hi" matching inside "waHIduddin"
+    const words = lowerQuery.split(/\s+/);
+    
+    // Priority 1: Check for category keywords first
     for (const entry of KNOWLEDGE_BASE) {
-      if (entry.keywords.some(keyword => lowerQuery.includes(keyword))) {
-        return entry.response;
-      }
+      if (entry.category === 'greetings') continue; // Skip greetings for first pass
+      
+      const matched = entry.keywords.some(keyword => {
+        // If keyword is one word, check exact word match
+        if (!keyword.includes(' ')) {
+          return words.includes(keyword);
+        }
+        // If keyword is a phrase, check if it exists in query
+        return lowerQuery.includes(keyword);
+      });
+
+      if (matched) return entry.response;
+    }
+
+    // Priority 2: Check for name/creator specifically (misspellings)
+    if (lowerQuery.includes('wahid') || lowerQuery.includes('samani') || lowerQuery.includes('blackbox') || lowerQuery.includes('creator')) {
+      return KNOWLEDGE_BASE.find(e => e.category === 'who')?.response || "";
     }
     
-    return "Scanning database... I didn't find a direct match for that. Try asking about Wahiduddin's 'Skills', 'Projects', or 'Who' he is.";
+    // Priority 3: Greetings
+    const greetingMatch = KNOWLEDGE_BASE.find(e => e.category === 'greetings')?.keywords.some(k => {
+      const cleanK = k.trim();
+      return words.includes(cleanK) || lowerQuery.startsWith(cleanK);
+    });
+    
+    if (greetingMatch) {
+      return KNOWLEDGE_BASE.find(e => e.category === 'greetings')?.response || "";
+    }
+    
+    return "Scanning database... I didn't find a direct match for that. Try asking specific terms like 'What are your skills?' or 'Show me projects'.";
   };
 
   const handleSend = async () => {
