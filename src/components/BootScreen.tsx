@@ -24,14 +24,22 @@ interface BootScreenProps {
   onComplete: () => void;
 }
 
+interface BootLogEntry {
+  text: string;
+  time: string;
+}
+
 const BootScreen: React.FC<BootScreenProps> = ({ onComplete }) => {
-  const [logs, setLogs] = useState<string[]>([]);
+  const [logs, setLogs] = useState<BootLogEntry[]>([]);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
     if (index < BOOT_LOGS.length) {
       const timeout = setTimeout(() => {
-        setLogs(prev => [...prev, BOOT_LOGS[index]]);
+        setLogs(prev => [...prev, {
+          text: BOOT_LOGS[index],
+          time: new Date().toLocaleTimeString()
+        }]);
         setIndex(prev => prev + 1);
       }, Math.random() * 200 + 50);
       return () => clearTimeout(timeout);
@@ -46,8 +54,8 @@ const BootScreen: React.FC<BootScreenProps> = ({ onComplete }) => {
       <div className="max-w-4xl mx-auto">
         {logs.map((log, i) => (
           <div key={i} className="mb-1 text-xs md:text-sm">
-            <span className="opacity-50 mr-2">[{new Date().toLocaleTimeString()}]</span>
-            {log}
+            <span className="opacity-50 mr-2">[{log.time}]</span>
+            {log.text}
           </div>
         ))}
         <div className="mt-4 animate-pulse">_</div>

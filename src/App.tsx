@@ -64,6 +64,10 @@ function App() {
   const [time, setTime] = useState(new Date());
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
+  const handleOnComplete = React.useCallback(() => {
+    setBooting(false);
+  }, []);
+
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
@@ -122,8 +126,8 @@ function App() {
           </button>
         </motion.div>
       ) : booting ? (
-        <motion.div key="boot" exit={{ opacity: 0 }}>
-          <BootScreen onComplete={() => setBooting(false)} />
+        <motion.div key={`boot-${booting}`} exit={{ opacity: 0 }}>
+          <BootScreen onComplete={handleOnComplete} />
         </motion.div>
       ) : !isLoggedIn ? (
         <motion.div 
