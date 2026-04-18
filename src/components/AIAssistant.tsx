@@ -65,7 +65,7 @@ const AIAssistant: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Neural link established. bl4ck30x Intelligence online. Please select a command category or type your query below.",
+      text: "Neural link established. bl4ck30x Intelligence online. Please select a command protocol below to receive official data.",
       sender: 'ai',
       timestamp: new Date()
     }

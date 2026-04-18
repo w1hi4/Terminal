@@ -41,8 +41,8 @@ import AIAssistant from './components/AIAssistant';
 
 const DesktopIcon = ({ icon: Icon, label, onClick, color = "text-white/80" }: any) => (
   <button 
-    onDoubleClick={onClick}
-    className="flex flex-col items-center gap-1 p-2 rounded hover:bg-white/10 transition-colors group w-24 select-none"
+    onClick={onClick}
+    className="flex flex-col items-center gap-1 p-2 rounded hover:bg-white/10 active:bg-white/20 transition-all group w-24 select-none outline-none focus:ring-1 focus:ring-white/20"
   >
     <div className={`p-3 rounded-lg bg-black/20 backdrop-blur-sm border border-white/5 group-hover:border-white/20 transition-all ${color}`}>
       <Icon className="w-8 h-8" />

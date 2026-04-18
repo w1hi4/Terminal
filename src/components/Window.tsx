@@ -21,7 +21,9 @@ const Window: React.FC<WindowProps> = ({ title, onClose, onMinimize, children, i
       drag={!isMaximized}
       dragMomentum={false}
       className={`absolute z-50 flex flex-col bg-[#1c1c1c] border border-white/10 rounded-lg shadow-2xl overflow-hidden ${
-        isMaximized ? 'inset-0 m-0 rounded-none' : 'w-[800px] h-[500px] top-20 left-20'
+        isMaximized 
+          ? 'inset-0 m-0 rounded-none' 
+          : 'w-[90vw] max-w-[800px] h-[70vh] max-h-[600px] top-10 left-[5vw] md:top-20 md:left-20'
       }`}
     >
       {/* Window Header */}
