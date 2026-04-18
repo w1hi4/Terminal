@@ -11,34 +11,39 @@ interface Message {
 
 const KNOWLEDGE_BASE = [
   {
-    category: 'who',
-    keywords: ['who', 'wahiduddin', 'samani', 'bl4ck30x', 'creator', 'owner', 'about admin', 'developer'],
-    response: "Wahiduddin Samani (bl4ck30x) is the Lead Developer and Security Researcher who engineered this entire OS. He specializes in bridging the gap between high-end frontend engineering and deep cybersecurity."
+    category: 'identity',
+    keywords: ['what are you', 'who are you', 'your name', 'purpose', 'assistant', 'bot', 'ai'],
+    response: "I am the bl4ck30x Intelligence System, a localized neural core engineered by Wahiduddin Samani. My purpose is to provide high-fidelity data regarding his professional expertise, projects, and the architecture of this OS simulation."
   },
   {
-    category: 'skills',
-    keywords: ['skills', 'tech', 'stack', 'languages', 'know', 'expert', 'coding', 'experience'],
-    response: "My creator is a master of the modern web: React, TypeScript, Node.js, and Python. On the security side, he's expert in Kali Linux, Penetration Testing, and DevSecOps. He builds secure, high-performance systems."
+    category: 'creator',
+    keywords: ['who is wahiduddin', 'creator', 'owner', 'samani', 'blackbox', 'bl4ck30x', 'who made this', 'author', 'developer'],
+    response: "Wahiduddin Samani (bl4ck30x) is an elite Lead Developer and Security Researcher. He specializes in bridging complex frontend engineering with deep-level cybersecurity and DevSecOps. He is the sole architect of this digital environment."
+  },
+  {
+    category: 'stack',
+    keywords: ['skills', 'stack', 'languages', 'tech', 'expert', 'coding', 'experience', 'programming', 'javascript', 'typescript', 'react', 'python', 'node'],
+    response: "Technical Dossier for Wahiduddin Samani:\n• Frontend: Master of React & TypeScript with high-fidelity UI/UX design.\n• Backend: Scalable Node.js, Python, and efficient API architecture.\n• Security: Expert in Kali Linux, Penetration Testing, and OWASP standards.\n• Operations: Advanced DevSecOps workflows and Cloud Security."
   },
   {
     category: 'projects',
-    keywords: ['project', 'work', 'build', 'terminal', 'game', 'crypto', 'portfolio', 'browser'],
-    response: "This OS is his primary showcase! It features a Linux-style Terminal, a Real-time Crypto Tracker, a futuristic CyberRunner game, and a sandbox Browser. Everything was hand-coded by him from the ground up."
+    keywords: ['projects', 'portfolio', 'work', 'build', 'apps', 'terminal', 'game', 'cyberrunner', 'crypto', 'tracker', 'browser'],
+    response: "Active Systems in this OS Portfolio:\n1. LINUX TERMINAL: A functional console for system interaction.\n2. CRYPTO PULSE: Real-time digital asset monitoring.\n3. CYBERRUNNER: A futuristic high-performance game logic showcase.\n4. SANDBOX BROWSER: A secure web simulation environment.\nAll modules were engineered from the ground up by Wahiduddin."
   },
   {
-    category: 'hire',
-    keywords: ['hire', 'contact', 'job', 'work with him', 'resume', 'email'],
-    response: "Wahiduddin is currently open to high-impact roles in DevSecOps and Lead Development. His unique blend of security and frontend mastery makes him a rare asset. You can find his contact details in the 'Portfolio' app."
+    category: 'career',
+    keywords: ['hire', 'contact', 'job', 'work with', 'availability', 'resume', 'cv', 'email', 'opportunity'],
+    response: "Wahiduddin is currently scanning for high-impact opportunities in Lead Development or DevSecOps. His unique cross-discipline expertise is a critical asset for teams requiring both performance and security. Contact protocols are available via the 'Portfolio' icon on the desktop."
   },
   {
-    category: 'os',
-    keywords: ['this os', 'what is this', 'website', 'kali', 'linux terminal'],
-    response: "You are inside 'bl4ck30x OS'—a living portfolio. It's a high-fidelity web simulation built with React and Tailwind CSS to prove that technical power and aesthetic design can coexist."
+    category: 'architecture',
+    keywords: ['how was this made', 'website built', 'react', 'tailwind', 'code', 'source', 'framework'],
+    response: "This OS simulation is built using a modern React 19 + TypeScript stack, styled with Tailwind CSS v4, and powered by Motion for high-fidelity animations. It utilizes a custom window management system to simulate a desktop environment."
   },
   {
     category: 'greetings',
-    keywords: ['hi ', 'hello', 'hey', 'greetings', 'sup', 'yo'],
-    response: "Greetings, user. Neural link established. I am the bl4ck30x AI. Ask me about Wahiduddin's 'Skills', 'Projects' or 'Who' he is!"
+    keywords: ['hi', 'hello', 'hey', 'greetings', 'sup', 'yo', 'good morning', 'good evening'],
+    response: "Neural link established. System status: Nominal. I am the bl4ck30x AI. Specify a data request: 'Skills', 'Projects', or 'Creator Info'."
   }
 ];
 
@@ -46,7 +51,7 @@ const AIAssistant: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "System initialized. bl4ck30x Intelligence at your service. Ask me about Wahiduddin's skills or projects.",
+      text: "Neural link established. bl4ck30x Intelligence online. Awaiting data query...",
       sender: 'ai',
       timestamp: new Date()
     }
@@ -65,42 +70,35 @@ const AIAssistant: React.FC = () => {
 
   const getLocalResponse = (query: string): string => {
     const lowerQuery = query.toLowerCase().trim();
+    if (!lowerQuery) return "Please enter a valid command.";
     
-    // Exact word matching to prevent "hi" matching inside "waHIduddin"
-    const words = lowerQuery.split(/\s+/);
+    const words = lowerQuery.split(/[\s,?.!]+/).filter(w => w.length > 0);
     
-    // Priority 1: Check for category keywords first
-    for (const entry of KNOWLEDGE_BASE) {
-      if (entry.category === 'greetings') continue; // Skip greetings for first pass
-      
-      const matched = entry.keywords.some(keyword => {
-        // If keyword is one word, check exact word match
-        if (!keyword.includes(' ')) {
-          return words.includes(keyword);
+    // Priority 1: High-importance categories (Career, Skills, Projects)
+    const priorityOrder = ['career', 'stack', 'projects', 'creator', 'identity', 'architecture'];
+    
+    for (const cat of priorityOrder) {
+      const entry = KNOWLEDGE_BASE.find(e => e.category === cat);
+      if (!entry) continue;
+
+      const matched = entry.keywords.some(k => {
+        if (k.includes(' ')) {
+          return lowerQuery.includes(k);
         }
-        // If keyword is a phrase, check if it exists in query
-        return lowerQuery.includes(keyword);
+        // Strict word matching for short words, substring for longer ones
+        return k.length <= 3 ? words.includes(k) : lowerQuery.includes(k);
       });
 
       if (matched) return entry.response;
     }
 
-    // Priority 2: Check for name/creator specifically (misspellings)
-    if (lowerQuery.includes('wahid') || lowerQuery.includes('samani') || lowerQuery.includes('blackbox') || lowerQuery.includes('creator')) {
-      return KNOWLEDGE_BASE.find(e => e.category === 'who')?.response || "";
+    // Priority 2: Greetings (only if no technical match found)
+    const greetingEntry = KNOWLEDGE_BASE.find(e => e.category === 'greetings');
+    if (greetingEntry?.keywords.some(k => words.includes(k) || lowerQuery.startsWith(k))) {
+      return greetingEntry.response;
     }
     
-    // Priority 3: Greetings
-    const greetingMatch = KNOWLEDGE_BASE.find(e => e.category === 'greetings')?.keywords.some(k => {
-      const cleanK = k.trim();
-      return words.includes(cleanK) || lowerQuery.startsWith(cleanK);
-    });
-    
-    if (greetingMatch) {
-      return KNOWLEDGE_BASE.find(e => e.category === 'greetings')?.response || "";
-    }
-    
-    return "Scanning database... I didn't find a direct match for that. Try asking specific terms like 'What are your skills?' or 'Show me projects'.";
+    return "Query unmatched. Database contains data on: 'Skills', 'Projects', 'Career Status', and 'System Architecture'. Please refine your inquiry.";
   };
 
   const handleSend = async () => {

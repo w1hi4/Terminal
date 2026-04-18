@@ -32,24 +32,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onPowerOff, onRestar
     >
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       
-      {/* Top Right Power Controls */}
-      <div className="absolute top-8 right-8 flex items-center gap-4 z-50">
-        <button 
-          onClick={onRestart}
-          className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white/40 hover:text-blue-400 transition-all group"
-          title="Restart"
-        >
-          <RotateCcw className="w-5 h-5 group-hover:rotate-[-45deg] transition-transform" />
-        </button>
-        <button 
-          onClick={onPowerOff}
-          className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white/40 hover:text-red-500 transition-all group"
-          title="Shut Down"
-        >
-          <Power className="w-5 h-5" />
-        </button>
-      </div>
-
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
