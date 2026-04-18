@@ -84,21 +84,21 @@ const Terminal: React.FC = () => {
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.1 }}
-              className="whitespace-pre-wrap break-all leading-relaxed"
+              className="whitespace-pre-wrap break-words leading-relaxed py-0.5"
             >
               {line.type === 'command' && (
-                <div className="inline-flex items-center mr-2 select-none">
-                  <span className="text-[#3b82f6] font-bold">w1hi4@kali</span>
+                <span className="inline-flex items-center mr-2 select-none">
+                  <span className="text-[#3b82f6] font-bold text-xs">bl4ck30x@kali</span>
                   <span className="text-white">:</span>
                   <span className="text-[#3b82f6] font-bold">~</span>
                   <span className="text-white">$</span>
-                </div>
+                </span>
               )}
               {typeof line.content === 'string' ? (
                 <span 
                   className={
                     line.type === 'error' ? 'text-red-500' : 
-                    line.type === 'system' ? 'text-white/40 italic' : 
+                    line.type === 'system' ? 'text-white/40 italic text-[10px]' : 
                     line.type === 'command' ? 'text-[#00ff00]' : ''
                   }
                   dangerouslySetInnerHTML={{ __html: line.content }}
@@ -110,6 +110,19 @@ const Terminal: React.FC = () => {
           ))}
         </AnimatePresence>
         <CommandInput onCommand={handleCommand} history={commandHistory} />
+      </div>
+
+      {/* Mobile Quick Commands */}
+      <div className="sm:hidden flex flex-wrap gap-2 pt-4 border-t border-white/5 bg-[#1c1c1c] pb-2 overflow-x-auto scrollbar-hide">
+        {['help', 'whoami', 'projects', 'skills', 'clear', 'about'].map(cmd => (
+          <button 
+            key={cmd}
+            onClick={() => handleCommand(cmd)}
+            className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-md text-[10px] uppercase tracking-widest font-bold hover:bg-blue-500/20 hover:border-blue-500/50 transition-all active:scale-95 whitespace-nowrap"
+          >
+            {cmd}
+          </button>
+        ))}
       </div>
     </div>
   );

@@ -13,8 +13,10 @@ const SnakeGame: React.FC = () => {
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
   
+  const [isStarted, setIsStarted] = useState(false);
+  
   const moveSnake = useCallback(() => {
-    if (gameOver) return;
+    if (gameOver || !isStarted) return;
 
     setSnake(prevSnake => {
       const head = { ...prevSnake[0] };
@@ -56,10 +58,22 @@ const SnakeGame: React.FC = () => {
       }
 
       switch (e.key) {
-        case 'ArrowUp': if (direction.y === 0) setDirection({ x: 0, y: -1 }); break;
-        case 'ArrowDown': if (direction.y === 0) setDirection({ x: 0, y: 1 }); break;
-        case 'ArrowLeft': if (direction.x === 0) setDirection({ x: -1, y: 0 }); break;
-        case 'ArrowRight': if (direction.x === 0) setDirection({ x: 1, y: 0 }); break;
+        case 'ArrowUp': 
+          if (!isStarted) setIsStarted(true);
+          if (direction.y === 0) setDirection({ x: 0, y: -1 }); 
+          break;
+        case 'ArrowDown': 
+          if (!isStarted) setIsStarted(true);
+          if (direction.y === 0) setDirection({ x: 0, y: 1 }); 
+          break;
+        case 'ArrowLeft': 
+          if (!isStarted) setIsStarted(true);
+          if (direction.x === 0) setDirection({ x: -1, y: 0 }); 
+          break;
+        case 'ArrowRight': 
+          if (!isStarted) setIsStarted(true);
+          if (direction.x === 0) setDirection({ x: 1, y: 0 }); 
+          break;
       }
     };
 
@@ -78,6 +92,7 @@ const SnakeGame: React.FC = () => {
     setFood(INITIAL_FOOD);
     setGameOver(false);
     setScore(0);
+    setIsStarted(false);
   };
 
   return (
@@ -117,43 +132,70 @@ const SnakeGame: React.FC = () => {
         })}
 
         {gameOver && (
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center text-center p-4">
+          <div 
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center text-center p-4 cursor-pointer z-[20]"
+            onClick={resetGame}
+          >
             <h2 className="text-2xl font-bold text-red-500 mb-2 uppercase tracking-tighter">System Failure</h2>
             <p className="text-xs text-white/60 mb-6 uppercase tracking-widest">Your snake has been terminated.</p>
             <div className="px-4 py-2 bg-white/10 border border-white/20 rounded text-[10px] font-bold uppercase tracking-[0.3em] animate-pulse">
-              Press Enter to Reboot
+              Tap or Enter to Reboot
+            </div>
+          </div>
+        )}
+
+        {!isStarted && !gameOver && (
+          <div 
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center text-center p-4 cursor-pointer z-[20]"
+            onClick={() => setIsStarted(true)}
+          >
+            <h2 className="text-xl font-bold text-green-400 mb-4 uppercase tracking-[0.2em]">Neural Snake Initialized</h2>
+            <div className="px-5 py-2.5 bg-green-500/20 border border-green-500/50 rounded-lg text-[10px] font-bold uppercase tracking-[0.3em] animate-pulse">
+              Tap or Arrow to Start
             </div>
           </div>
         )}
       </div>
 
       <div className="mt-6 flex flex-col items-center gap-4">
-        <div className="md:hidden grid grid-cols-3 gap-2">
+        <div className="md:hidden grid grid-cols-3 gap-2 p-4 bg-white/5 rounded-3xl border border-white/10 shadow-2xl">
           <div />
           <button 
-            className="w-12 h-12 flex items-center justify-center bg-white/10 border border-white/20 rounded-xl active:bg-green-500/20 active:border-green-500/50 transition-all"
-            onPointerDown={() => direction.y === 0 && setDirection({ x: 0, y: -1 })}
+            className="w-14 h-14 flex items-center justify-center bg-white/10 border border-white/20 rounded-2xl active:bg-green-500/30 active:border-green-500/50 transition-all shadow-lg active:scale-90"
+            onPointerDown={() => {
+              if (!isStarted) setIsStarted(true);
+              direction.y === 0 && setDirection({ x: 0, y: -1 });
+            }}
           >
-            <ChevronUp className="w-6 h-6 text-green-400" />
+            <ChevronUp className="w-8 h-8 text-green-400" />
           </button>
           <div />
           <button 
-            className="w-12 h-12 flex items-center justify-center bg-white/10 border border-white/20 rounded-xl active:bg-green-500/20 active:border-green-500/50 transition-all"
-            onPointerDown={() => direction.x === 0 && setDirection({ x: -1, y: 0 })}
+            className="w-14 h-14 flex items-center justify-center bg-white/10 border border-white/20 rounded-2xl active:bg-green-500/30 active:border-green-500/50 transition-all shadow-lg active:scale-90"
+            onPointerDown={() => {
+              if (!isStarted) setIsStarted(true);
+              direction.x === 0 && setDirection({ x: -1, y: 0 });
+            }}
           >
-            <ChevronLeft className="w-6 h-6 text-green-400" />
+            <ChevronLeft className="w-8 h-8 text-green-400" />
           </button>
           <button 
-            className="w-12 h-12 flex items-center justify-center bg-white/10 border border-white/20 rounded-xl active:bg-green-500/20 active:border-green-500/50 transition-all"
-            onPointerDown={() => direction.y === 0 && setDirection({ x: 0, y: 1 })}
+            className="w-14 h-14 flex items-center justify-center bg-white/10 border border-white/20 rounded-2xl active:bg-green-500/30 active:border-green-500/50 transition-all shadow-lg active:scale-90"
+            onPointerDown={() => {
+              if (!isStarted) setIsStarted(true);
+              direction.y === 0 && setDirection({ x: 0, y: 1 });
+            }}
           >
-            <ChevronDown className="w-6 h-6 text-green-400" />
+            <ChevronDown className="w-8 h-8 text-green-400" />
           </button>
           <button 
-            className="w-12 h-12 flex items-center justify-center bg-white/10 border border-white/20 rounded-xl active:bg-green-500/20 active:border-green-500/50 transition-all"
-            onPointerDown={() => direction.x === 0 && setDirection({ x: 1, y: 0 })}
+            className="w-14 h-14 flex items-center justify-center bg-white/10 border border-white/20 rounded-2xl active:bg-green-500/30 active:border-green-500/50 transition-all shadow-lg active:scale-90"
+            onPointerDown={() => {
+              if (!isStarted) setIsStarted(true);
+              direction.x === 0 && setDirection({ x: 1, y: 0 });
+            }}
           >
-            <ChevronRight className="w-6 h-6 text-green-400" />
+            <ChevronRight className="w-8 h-8 text-green-400" />
           </button>
         </div>
         

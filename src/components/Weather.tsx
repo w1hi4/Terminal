@@ -46,8 +46,8 @@ const Weather: React.FC = () => {
   };
 
   return (
-    <div className="h-full w-full bg-gradient-to-br from-[#1a1c2c] to-[#4a1942] text-white p-8 font-sans overflow-y-auto">
-      <div className="max-w-md mx-auto space-y-8">
+    <div className="h-full w-full bg-gradient-to-br from-[#1a1c2c] to-[#4a1942] text-white p-4 sm:p-8 font-sans overflow-y-auto">
+      <div className="max-w-md mx-auto space-y-6 sm:space-y-8">
         {/* Search Bar */}
         <div className="relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
@@ -86,7 +86,7 @@ const Weather: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 xs:grid-cols-2 gap-4">
               <div className="bg-white/5 p-4 rounded-2xl border border-white/10 flex items-center gap-4">
                 <div className="p-2 bg-blue-500/20 rounded-lg">
                   <Wind className="w-5 h-5 text-blue-400" />

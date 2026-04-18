@@ -411,7 +411,7 @@ function App() {
           </AnimatePresence>
 
           {/* Professional Floating AI Assistant Widget */}
-          <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[1000] flex flex-col items-end gap-3 md:gap-4 w-full max-w-[calc(100vw-32px)] md:w-auto">
+          <div className="fixed bottom-20 right-4 sm:bottom-24 md:bottom-6 md:right-6 z-[1000] flex flex-col items-end gap-3 md:gap-4 w-full max-w-[calc(100vw-32px)] md:w-auto">
             <AnimatePresence>
               {isAIAssistantOpen && (
                 <motion.div
@@ -462,53 +462,53 @@ function App() {
           </div>
 
           {/* Bottom Dock */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 p-2 bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl z-40">
+          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl z-40 max-w-[95vw] overflow-x-auto scrollbar-hide">
             <button 
               onClick={() => openWindow(setIsTerminalOpen, 'terminal')}
-              className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-[#00ff00]"
+              className="p-2.5 sm:p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-[#00ff00] shrink-0"
             >
-              <TerminalIcon className="w-6 h-6" />
+              <TerminalIcon className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
             <button 
               onClick={() => openWindow(setIsBrowserOpen, 'browser')}
-              className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-blue-400"
+              className="p-2.5 sm:p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-blue-400 shrink-0"
             >
-              <Globe className="w-6 h-6" />
+              <Globe className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
             <button 
               onClick={() => openWindow(setIsSystemMonitorOpen, 'system-monitor')}
-              className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-green-400"
+              className="p-2.5 sm:p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-green-400 shrink-0"
               title="System Monitor"
             >
-              <Cpu className="w-6 h-6" />
+              <Cpu className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
             <button 
               onClick={() => openWindow(setIsWeatherOpen, 'weather')}
-              className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-yellow-400"
+              className="p-2.5 sm:p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-yellow-400 shrink-0"
               title="Weather"
             >
-              <Sun className="w-6 h-6" />
+              <Sun className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
             <button 
               onClick={() => openWindow(setIsCryptoOpen, 'crypto')}
-              className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-orange-400"
+              className="p-2.5 sm:p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-orange-400 shrink-0"
               title="Market Pulse"
             >
-              <TrendingUp className="w-6 h-6" />
+              <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
             <button 
               onClick={() => openWindow(setIsPortfolioOpen, 'portfolio')}
-              className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-yellow-400"
+              className="p-2.5 sm:p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-blue-400 shrink-0"
               title="Portfolio"
             >
-              <Folder className="w-6 h-6" />
+              <Folder className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
             <button 
               onClick={() => openWindow(setIsSnakeOpen, 'snake')}
-              className="p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-green-400"
+              className="p-2.5 sm:p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all hover:scale-110 text-green-400 shrink-0"
               title="Snake"
             >
-              <Gamepad2 className="w-6 h-6" />
+              <Gamepad2 className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
           </div>
         </motion.div>

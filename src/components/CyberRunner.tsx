@@ -165,7 +165,7 @@ const CyberRunner: React.FC = () => {
             <h2 className="text-2xl font-bold text-red-500 mb-2 uppercase tracking-tighter">System Overload</h2>
             <p className="text-xs text-white/60 mb-6 uppercase tracking-widest">Connection lost at {Math.floor(score / 10)} units.</p>
             <div className="px-4 py-2 bg-white/10 border border-white/20 rounded text-[10px] font-bold uppercase tracking-[0.3em] animate-pulse">
-              Enter or Tap to Reboot
+              Tap or Enter to Reboot
             </div>
           </div>
         )}

@@ -6,7 +6,7 @@ export const COMMANDS: CommandRegistry = {
     description: 'List all available commands',
     action: () => {
       const list = Object.keys(COMMANDS).sort().map(cmd => {
-        return `<span class="text-green-400 font-bold">${cmd.padEnd(12)}</span> - ${COMMANDS[cmd].description}`;
+        return `<span class="text-green-400 font-bold">${cmd}</span> - ${COMMANDS[cmd].description}`;
       }).join('\n');
       return list;
     }

@@ -2,13 +2,13 @@ import React from 'react';
 
 const PortfolioText: React.FC = () => {
   return (
-    <div className="h-full w-full bg-[#0d1117] text-[#c9d1d9] p-8 font-sans overflow-y-auto selection:bg-blue-500/30">
-      <div className="max-w-3xl mx-auto space-y-10">
+    <div className="h-full w-full bg-[#0d1117] text-[#c9d1d9] p-4 sm:p-8 font-sans overflow-y-auto selection:bg-blue-500/30">
+      <div className="max-w-3xl mx-auto space-y-6 sm:space-y-10">
         <header className="text-center space-y-6">
           <img 
             src="https://readme-typing-svg.herokuapp.com?lines=Full-Stack+Developer;Security+Researcher;Production+Infrastructure&center=true&width=650&height=55&color=58a6ff" 
             alt="Typing SVG" 
-            className="mx-auto"
+            className="mx-auto max-w-full h-auto"
           />
           
           <div className="flex flex-wrap justify-center gap-3">
@@ -186,11 +186,11 @@ const PortfolioText: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
                 <p className="text-[10px] text-white/30 uppercase tracking-[0.2em] font-bold">Direct Email</p>
-                <a href="mailto:samaniwahiduddin382@gmail.com" className="text-lg text-blue-400 hover:text-blue-300 transition-colors font-medium">samaniwahiduddin382@gmail.com</a>
+                <a href="mailto:samaniwahiduddin382@gmail.com" className="text-base sm:text-lg text-blue-400 hover:text-blue-300 transition-colors font-medium break-all">samaniwahiduddin382@gmail.com</a>
               </div>
               <div className="space-y-2">
                 <p className="text-[10px] text-white/30 uppercase tracking-[0.2em] font-bold">Professional Network</p>
-                <a href="https://linkedin.com/in/samani-wahiduddin" target="_blank" rel="noopener noreferrer" className="text-lg text-blue-400 hover:text-blue-300 transition-colors font-medium">linkedin.com/in/samani-wahiduddin</a>
+                <a href="https://linkedin.com/in/samani-wahiduddin" target="_blank" rel="noopener noreferrer" className="text-base sm:text-lg text-blue-400 hover:text-blue-300 transition-colors font-medium break-all">linkedin.com/in/samani-wahiduddin</a>
               </div>
             </div>
           </div>
