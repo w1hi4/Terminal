@@ -161,12 +161,18 @@ const CyberRunner: React.FC = () => {
         )}
 
         {gameOver && (
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center text-center">
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center text-center p-4">
             <h2 className="text-2xl font-bold text-red-500 mb-2 uppercase tracking-tighter">System Overload</h2>
-            <p className="text-xs text-white/60 mb-6 uppercase tracking-widest">Connection lost at {Math.floor(score / 10)} units.</p>
-            <div className="px-4 py-2 bg-white/10 border border-white/20 rounded text-[10px] font-bold uppercase tracking-[0.3em] animate-pulse">
-              Tap or Enter to Reboot
-            </div>
+            <p className="text-xs text-white/60 mb-8 uppercase tracking-widest leading-relaxed">Connection lost at {Math.floor(score / 10)} units. Security breach detected.</p>
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                resetGame();
+              }}
+              className="px-8 py-3 bg-red-500 text-white font-bold uppercase tracking-[0.2em] rounded-lg active:scale-95 transition-all shadow-[0_0_20px_rgba(239,44,44,0.4)]"
+            >
+              Reboot Runtime
+            </button>
           </div>
         )}
       </div>

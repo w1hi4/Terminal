@@ -56,7 +56,7 @@ export const COMMANDS: CommandRegistry = {
   },
   skills: {
     description: 'Alias for techstack',
-    action: () => COMMANDS.techstack.action()
+    action: (args: string[]) => COMMANDS.techstack.action(args)
   },
   clear: {
     description: 'Clear the terminal screen',

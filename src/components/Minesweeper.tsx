@@ -183,27 +183,25 @@ const Minesweeper: React.FC = () => {
         </div>
 
         {(gameOver || win) && (
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center text-center p-4 rounded">
-            <h2 className={`text-xl font-bold mb-2 uppercase tracking-tighter ${gameOver ? 'text-red-500' : 'text-green-400'}`}>
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center text-center p-4 rounded z-30">
+            <h2 className={`text-2xl font-bold mb-4 uppercase tracking-tighter ${gameOver ? 'text-red-500' : 'text-green-400'}`}>
               {gameOver ? 'Detonated' : 'Secured'}
             </h2>
-            <div className="px-3 py-1.5 bg-white/10 border border-white/20 rounded text-[9px] font-bold uppercase tracking-[0.2em] animate-pulse">
-              Press Enter to Reset
-            </div>
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                initGrid();
+              }}
+              className="px-8 py-3 bg-blue-500 text-white font-bold uppercase tracking-[0.2em] rounded-lg active:scale-95 transition-all shadow-[0_0_20px_rgba(59,130,246,0.4)] text-xs"
+            >
+              Scan Again
+            </button>
           </div>
         )}
       </div>
 
       <div className="mt-6 flex flex-col items-center gap-2">
-        {(gameOver || win) && (
-          <button 
-            onClick={initGrid}
-            className="md:hidden px-6 py-2 bg-blue-500 text-black font-bold uppercase tracking-widest rounded-lg active:scale-95 transition-transform text-xs"
-          >
-            New Game
-          </button>
-        )}
-        <p className="text-[10px] text-white/40 flex items-center italic uppercase tracking-widest text-center">
+        <p className="text-[9px] text-white/40 flex items-center italic uppercase tracking-widest text-center max-w-[200px]">
           {window.innerWidth < 768 ? 'Toggle Flag/Reveal Mode to play' : 'Left-click: Reveal • Right-click: Flag • Enter: Restart'}
         </p>
       </div>

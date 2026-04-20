@@ -157,59 +157,67 @@ const SnakeGame: React.FC = () => {
         )}
       </div>
 
-      <div className="mt-6 flex flex-col items-center gap-4">
-        <div className="md:hidden grid grid-cols-3 gap-2 p-4 bg-white/5 rounded-3xl border border-white/10 shadow-2xl">
+      <div className="mt-4 flex flex-col items-center gap-4">
+        {/* On-screen Controls for Touch Devices / Small Screens */}
+        <div className="grid grid-cols-3 gap-2 p-3 bg-white/5 rounded-3xl border border-white/10 shadow-2xl touch-none">
           <div />
           <button 
-            className="w-14 h-14 flex items-center justify-center bg-white/10 border border-white/20 rounded-2xl active:bg-green-500/30 active:border-green-500/50 transition-all shadow-lg active:scale-90"
-            onPointerDown={() => {
+            className="w-12 h-12 flex items-center justify-center bg-white/10 border border-white/20 rounded-2xl active:bg-green-500/30 active:border-green-500/50 transition-all shadow-lg active:scale-90"
+            onPointerDown={(e) => {
+              e.preventDefault();
               if (!isStarted) setIsStarted(true);
-              direction.y === 0 && setDirection({ x: 0, y: -1 });
+              if (direction.y === 0) setDirection({ x: 0, y: -1 });
             }}
           >
-            <ChevronUp className="w-8 h-8 text-green-400" />
+            <ChevronUp className="w-7 h-7 text-green-400" />
           </button>
           <div />
           <button 
-            className="w-14 h-14 flex items-center justify-center bg-white/10 border border-white/20 rounded-2xl active:bg-green-500/30 active:border-green-500/50 transition-all shadow-lg active:scale-90"
-            onPointerDown={() => {
+            className="w-12 h-12 flex items-center justify-center bg-white/10 border border-white/20 rounded-2xl active:bg-green-500/30 active:border-green-500/50 transition-all shadow-lg active:scale-90"
+            onPointerDown={(e) => {
+              e.preventDefault();
               if (!isStarted) setIsStarted(true);
-              direction.x === 0 && setDirection({ x: -1, y: 0 });
+              if (direction.x === 0) setDirection({ x: -1, y: 0 });
             }}
           >
-            <ChevronLeft className="w-8 h-8 text-green-400" />
+            <ChevronLeft className="w-7 h-7 text-green-400" />
           </button>
           <button 
-            className="w-14 h-14 flex items-center justify-center bg-white/10 border border-white/20 rounded-2xl active:bg-green-500/30 active:border-green-500/50 transition-all shadow-lg active:scale-90"
-            onPointerDown={() => {
+            className="w-12 h-12 flex items-center justify-center bg-white/10 border border-white/20 rounded-2xl active:bg-green-500/30 active:border-green-500/50 transition-all shadow-lg active:scale-90"
+            onPointerDown={(e) => {
+              e.preventDefault();
               if (!isStarted) setIsStarted(true);
-              direction.y === 0 && setDirection({ x: 0, y: 1 });
+              if (direction.y === 0) setDirection({ x: 0, y: 1 });
             }}
           >
-            <ChevronDown className="w-8 h-8 text-green-400" />
+            <ChevronDown className="w-7 h-7 text-green-400" />
           </button>
           <button 
-            className="w-14 h-14 flex items-center justify-center bg-white/10 border border-white/20 rounded-2xl active:bg-green-500/30 active:border-green-500/50 transition-all shadow-lg active:scale-90"
-            onPointerDown={() => {
+            className="w-12 h-12 flex items-center justify-center bg-white/10 border border-white/20 rounded-2xl active:bg-green-500/30 active:border-green-500/50 transition-all shadow-lg active:scale-90"
+            onPointerDown={(e) => {
+              e.preventDefault();
               if (!isStarted) setIsStarted(true);
-              direction.x === 0 && setDirection({ x: 1, y: 0 });
+              if (direction.x === 0) setDirection({ x: 1, y: 0 });
             }}
           >
-            <ChevronRight className="w-8 h-8 text-green-400" />
+            <ChevronRight className="w-7 h-7 text-green-400" />
           </button>
         </div>
         
         {gameOver && (
           <button 
-            onClick={resetGame}
-            className="md:hidden px-6 py-2 bg-green-500 text-black font-bold uppercase tracking-widest rounded-lg active:scale-95 transition-transform"
+            onClick={(e) => {
+              e.stopPropagation();
+              resetGame();
+            }}
+            className="px-6 py-2 bg-green-500 text-black font-bold uppercase tracking-widest rounded-lg active:scale-95 transition-transform text-xs"
           >
-            Restart Game
+            Reboot System
           </button>
         )}
 
-        <p className="text-[10px] text-white/40 flex items-center italic uppercase tracking-widest text-center">
-          {window.innerWidth < 768 ? 'Use D-Pad to Navigate' : 'Use Arrow Keys to Move • Enter to Restart'}
+        <p className="text-[9px] text-white/40 flex items-center italic uppercase tracking-widest text-center max-w-[200px]">
+          Arrow Keys or D-Pad to Move • Enter to Restart
         </p>
       </div>
     </div>

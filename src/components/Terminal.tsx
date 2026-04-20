@@ -88,19 +88,19 @@ const Terminal: React.FC = () => {
               transition={{ duration: 0.1 }}
               className="w-full whitespace-pre-wrap break-words leading-relaxed text-[10px] sm:text-xs text-left overflow-hidden"
             >
-              <div className="flex items-start gap-1.5 sm:gap-2">
+              <div className="flex flex-row items-center gap-1.5 sm:gap-2 flex-nowrap w-full">
                 {line.type === 'command' && (
-                  <div className="flex items-center select-none shrink-0 opacity-90 whitespace-nowrap pt-0.5">
+                  <div className="flex items-center select-none shrink-0 opacity-90 whitespace-nowrap text-[10px] sm:text-xs">
                     <span className="text-[#3b82f6] font-bold">
                       <span className="hidden xs:inline">bl4ck30x@kali</span>
                       <span className="xs:hidden">w1hi4</span>
                     </span>
                     <span className="text-white">:</span>
                     <span className="text-[#3b82f6] font-bold">~</span>
-                    <span className="text-white">$</span>
+                    <span className="text-white font-bold ml-0.5">$</span>
                   </div>
                 )}
-                <div className="flex-1 min-w-0 pt-0.5">
+                <div className="flex-1 min-w-0">
                   {typeof line.content === 'string' ? (
                     <span 
                       className={
